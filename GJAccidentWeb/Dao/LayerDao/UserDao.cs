@@ -80,7 +80,7 @@ namespace GJAccidentWeb.Dao.LayerDao
         {
             Result<List<UserInfo>> result = new Result<List<UserInfo>>();
             StringBuilder sql_search = new StringBuilder(CommonTool.SQL_HEAD);
-            sql_search.Append($" select f_id, username, createdby, createddate,  lastupdatedby,  lastupdateddate from web_users t   where t.web='事故报警系统'  and (t.createdby ='{userName}' or t.username ='{userName}') order by username");
+            sql_search.Append($" select f_id, username, createdby, createddate,  lastupdatedby,  lastupdateddate,companyId,userNo from web_users t   where t.web='事故报警系统'  and (t.createdby ='{userName}' or t.username ='{userName}') order by username");
             sql_search.Append(CommonTool.getSQL_TAIL((pager.page - 1) * pager.recPerPage, pager.page * pager.recPerPage));
             ORACLEHelper context = new ORACLEHelper(1);
             DataTable dt_data = null;
@@ -106,6 +106,8 @@ namespace GJAccidentWeb.Dao.LayerDao
                         }
                         model.lastUpdatedBy = item["lastUpdatedBy"] != DBNull.Value ? item["lastUpdatedBy"].ToString() : null;
                         model.createdBy = item["createdBy"] != DBNull.Value ? item["createdBy"].ToString() : null;
+                        model.companyId = dt_data.Rows[0]["companyId"]?.ToString();
+                        model.userNo = dt_data.Rows[0]["userNo"]?.ToString();
                         dataList.Add(model);
                     }
                 }
@@ -122,7 +124,7 @@ namespace GJAccidentWeb.Dao.LayerDao
         {
             Result<UserInfo> result = new Result<UserInfo>();
             UserInfo model = null;
-            StringBuilder sql_search = new StringBuilder(" select f_id, username, phonenumber, email from web_users t where t.web='事故报警系统'  ");
+            StringBuilder sql_search = new StringBuilder(" select f_id, username, phonenumber, email,companyId,userNo from web_users t where t.web='事故报警系统'  ");
             if (!string.IsNullOrEmpty(condition.id))
             {
                 sql_search.Append(" and t.f_id='"+ condition.id + "'");
@@ -142,6 +144,8 @@ namespace GJAccidentWeb.Dao.LayerDao
                     model.userName=dt_data.Rows[0]["userName"].ToString();
                     model.phoneNum = dt_data.Rows[0]["phonenumber"]!=DBNull.Value? dt_data.Rows[0]["phonenumber"].ToString():null;
                     model.email = dt_data.Rows[0]["email"] != DBNull.Value ? dt_data.Rows[0]["email"].ToString() : null;
+                    model.companyId = dt_data.Rows[0]["companyId"]?.ToString();
+                    model.userNo = dt_data.Rows[0]["userNo"]?.ToString();
                 }
                 result.data = model;
             }

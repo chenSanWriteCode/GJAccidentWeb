@@ -28,7 +28,9 @@ namespace GJAccidentWeb.Services.ServiceImpl
                 userName = t.userName,
                 phoneNum = t.phoneNum,
                 email = t.email,
-                password = t.password
+                password = t.password,
+                companyId = t.companyId,
+                userNo = t.userNo
             };
             var result_back= await Task.Factory.StartNew(() => dao.add(model));
             if (!result_back.success)
@@ -123,7 +125,9 @@ namespace GJAccidentWeb.Services.ServiceImpl
                 id = t.id,
                 userName = t.userName,
                 phoneNum = t.phoneNum,
-                email = t.email
+                email = t.email,
+                companyId=t.companyId,
+                userNo=t.userNo
             };
             var result_back = await Task.Factory.StartNew(() => dao.update(model));
             if (!result_back.success)

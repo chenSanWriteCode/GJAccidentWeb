@@ -21,7 +21,6 @@
     <div class="form-group">
         <label for="companyId" class="col-md-1">分公司</label>
         <div class="col-md-3">
-            <input id="companyId" class="form-control" name="companyId" type="text" />
             <select class="chosen-select form-control" id="companyId"  name="companyId">
                 @foreach (var item in Html.companyInfo_All(ModelType.DefaultModel))
                 {

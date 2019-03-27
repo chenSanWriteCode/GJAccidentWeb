@@ -43,7 +43,7 @@ namespace GJAccidentWeb.Controllers
             {
                 string userName = User.Identity.Name;
                 var result = await service.add(model, userName);
-                ViewBag.ReturnUrl = "/User/Index";
+                ViewBag.ReturnUrl = "/Accident/Index";
                 if (result.success)
                 {
                     return View("Success");
@@ -129,7 +129,7 @@ namespace GJAccidentWeb.Controllers
         public async Task<ActionResult> Delete(string id)
         {
             var result = await service.delete(id);
-            ViewBag.ReturnUrl = "/User/Index";
+            ViewBag.ReturnUrl = "/Accident/Index";
             if (result.success)
             {
                 return View("Success");
