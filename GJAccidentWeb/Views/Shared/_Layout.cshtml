@@ -61,7 +61,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li>@Html.ActionLink("欢迎您 " + @User.Identity.Name, "Update", "User",new { id = Html.getUserIdByName(User.Identity.Name) },null)</li>
+                    <li>@Html.ActionLink("欢迎您 " +Html.getUserNameByUserNo(User.Identity.Name), "Update", "User",new { id = Html.getUserIdByName(User.Identity.Name) },null)</li>
                     <li>@Html.ActionLink("注销", "LogOff", "Account")</li>
                 </ul>
             </div>

@@ -18,10 +18,10 @@ namespace GJAccidentWeb.Dao.LayerDao
             try
             {
                 ORACLEHelper context = new ORACLEHelper(1);
-                int count = Convert.ToInt32(context.GetSingle($"select count(1) from web_users t where t.username='{t.userName}'"));
+                int count = Convert.ToInt32(context.GetSingle($"select count(1) from web_users t where t.userNo='{t.userNo}'"));
                 if (count>0)
                 {
-                    result.addError($"用户名{t.userName}已存在");
+                    result.addError($"工号{t.userNo}已存在");
                     return result;
                 }
                 count = context.ExecuteSql(sql);
@@ -133,6 +133,10 @@ namespace GJAccidentWeb.Dao.LayerDao
             {
                 sql_search.Append(" and t.username='" + condition.userName + "'");
             }
+            if (!string.IsNullOrEmpty(condition.userNo))
+            {
+                sql_search.Append(" and t.userNo='" + condition.userNo + "'");
+            }
             ORACLEHelper context = new ORACLEHelper(1);
             try
             {
@@ -162,7 +166,7 @@ namespace GJAccidentWeb.Dao.LayerDao
             ORACLEHelper context = new ORACLEHelper(1);
             try
             {
-                result = Convert.ToInt32(context.GetSingle($"select count(1) from web_users t where t.web='事故报警系统'  and (t.createdby ='{userName}' or t.username ='{userName}')"));
+                result = Convert.ToInt32(context.GetSingle($"select count(1) from web_users t where t.web='事故报警系统'  and (t.createdby ='{userName}' or t.userNo ='{userName}')"));
             }
             catch (Exception)
             {
@@ -173,14 +177,14 @@ namespace GJAccidentWeb.Dao.LayerDao
         public Result<UserInfo> update(UserInfo t)
         {
             Result<UserInfo> result = new Result<UserInfo>();
-            string sql = $"select count(1) from web_users t where t.f_id<>'{t.id}' and t.username='{t.userName}'";
+            string sql = $"select count(1) from web_users t where t.f_id<>'{t.id}' and t.userNo='{t.userNo}'";
             try
             {
                 ORACLEHelper context = new ORACLEHelper(1);
                 var count = Convert.ToInt32(context.GetSingle(sql));
                 if (count>0)
                 {
-                    result.addError($"用户名{t.userName}已经被用过了");
+                    result.addError($"工号{t.userNo}已经被用过了");
                     return result;
                 }
                 sql = $"update web_users t set t.username='{t.userName}' , t.phonenumber='{t.phoneNum}' , t.email='{t.email}',t.lastUpdatedBy='{t.lastUpdatedBy}',t.lastUpdateddate=to_date('{t.lastUpdatedDate}','yyyy/MM/dd HH24:mi:ss'),t.companyId={t.companyId},t.userNo='{t.userNo}' where t.f_id='{t.id}'";
@@ -203,7 +207,7 @@ namespace GJAccidentWeb.Dao.LayerDao
             ORACLEHelper context = new ORACLEHelper(1);
             try
             {
-                result.data = Convert.ToInt32(context.GetSingle($"select count(1) from web_users where username='{user.userName}' and password='{user.password}'"));
+                result.data = Convert.ToInt32(context.GetSingle($"select count(1) from web_users where userNo='{user.userNo}' and password='{user.password}'"));
                 if (result.data==0)
                 {
                     result.addError("用户名或密码不正确");

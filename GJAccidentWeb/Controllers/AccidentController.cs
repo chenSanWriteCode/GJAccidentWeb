@@ -71,11 +71,12 @@ namespace GJAccidentWeb.Controllers
             {
                 var lines = await commonService.lineInfo();
                 model.lineName = lines.First(x => x.lineId == model.lineId).lineName;
-                var userModel = await userService.searchModelByCondition(new UserInfo { userName = User.Identity.Name });
-                if (userModel.success)
-                {
-                    model.optId = userModel.data.id;
-                }
+                //var userModel = await userService.searchModelByCondition(new UserInfo { userName = User.Identity.Name });
+                //if (userModel.success)
+                //{
+                //    model.optId = userModel.data.id;
+                //}
+                model.optId = User.Identity.Name;
                 var depart = await commonService.getDepartInfoByLine(new Line { lineId = model.lineId });
                 model.dwName = depart.departName;
                 model.dwId = Convert.ToInt32(depart.departId);
@@ -114,11 +115,12 @@ namespace GJAccidentWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-               var userModel = await userService.searchModelByCondition(new UserInfo { userName= User.Identity.Name });
-                if (userModel.success)
-                {
-                    model.optId = userModel.data.id;
-                }
+               //var userModel = await userService.searchModelByCondition(new UserInfo { userName= User.Identity.Name });
+               // if (userModel.success)
+               // {
+               //     model.optId = userModel.data.id;
+               // }
+                model.optId = User.Identity.Name;
                 var lines = await commonService.lineInfo();
                 model.lineName = lines.First(x => x.lineId == model.lineId).lineName;
                 var depart = await commonService.getDepartInfoByLine(new Line { lineId = model.lineId });

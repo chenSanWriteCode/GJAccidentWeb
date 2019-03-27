@@ -447,7 +447,7 @@ namespace GJAccidentWeb.Infrastructure
         public static Dictionary<string, string> userNotInRole(this HtmlHelper html,string userName)
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
-            string sql = $"select t.f_id,t.username from web_users t where t.f_id not in (select userid from web_userrole) and t.web='事故报警系统' and t.createdby='{userName}' order by t.username";
+            string sql = $"select t.f_id,t.userNo from web_users t where t.f_id not in (select userid from web_userrole) and t.web='事故报警系统' and t.createdby='{userName}' order by t.userNo";
             try
             {
                 ORACLEHelper context = new ORACLEHelper(1);
@@ -499,7 +499,7 @@ namespace GJAccidentWeb.Infrastructure
         /// <returns></returns>
         public static string getUserIdByName(this HtmlHelper html, string userName)
         {
-            string sql = $"select t.f_id from web_users t where t.username='{userName}'";
+            string sql = $"select t.f_id from web_users t where t.userNo='{userName}'";
             string userId = null;
             try
             {
@@ -510,6 +510,20 @@ namespace GJAccidentWeb.Infrastructure
             {
             }
             return userId;
+        }
+        public static string getUserNameByUserNo(this HtmlHelper html,string userNo)
+        {
+            string sql = $"select t.userName from web_users t where t.userNo='{userNo}'";
+            string userName = null;
+            try
+            {
+                ORACLEHelper context = new ORACLEHelper(1);
+                userName = context.GetSingle(sql)?.ToString();
+            }
+            catch (Exception)
+            {
+            }
+            return userName;
         }
         /// <summary>
         /// 获取数据权限的级别
@@ -544,7 +558,7 @@ namespace GJAccidentWeb.Infrastructure
         /// <returns></returns>
         public static string getRoleId(string userName)
         {
-            return $"select ur.roleid from web_userrole ur where ur.userid =(select u.f_id from web_users u where u.username='{userName}')";
+            return $"select ur.roleid from web_userrole ur where ur.userid =(select u.f_id from web_users u where u.userNo='{userName}')";
         }
         /// <summary>
         /// 用户数据权限等级

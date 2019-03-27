@@ -9,7 +9,6 @@ namespace GJAccidentWeb.Models
     public class UserCreateModel
     {
         public string id { get; set; }
-        [Required]
         public string userName { get; set; }
         [Phone(ErrorMessage = "不是有效的电话号码")]
         public string phoneNum { get; set; }
@@ -37,7 +36,6 @@ namespace GJAccidentWeb.Models
     {
         [Required(ErrorMessage = "出现不可预期异常，请重新操作")]
         public string id { get; set; }
-        [Required]
         public string userName { get; set; }
         [Phone(ErrorMessage = "不是有效的电话号码")]
         public string phoneNum { get; set; }

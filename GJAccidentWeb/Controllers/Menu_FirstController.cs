@@ -15,6 +15,7 @@ namespace GJAccidentWeb.Controllers
     {
         [Dependency]
         public IMenuService service { get; set; }
+
         // GET: Menu_First
         public async Task<ActionResult> Index(Pager<List<Menu>> pager)
         {

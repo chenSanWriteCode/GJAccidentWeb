@@ -29,7 +29,7 @@ namespace GJAccidentWeb.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Login(string userName, string password, [Required]string returnUrl)
         {
-            var result = await service.passwordSignIn(new UserInfo { userName = userName, password = password });
+            var result = await service.passwordSignIn(new UserInfo { userNo = userName, password = password });
             if (result.success)
             {
                 FormsAuthentication.SetAuthCookie(userName, false);
