@@ -1,0 +1,66 @@
+﻿@using GJAccidentWeb.Infrastructure
+@{
+    ViewBag.Title = "增加二级目录";
+}
+<script type="text/javascript">
+    function submitForm() {
+        if ($('#orderId').val() < 1) {
+            bootbox.alert("顺序需要大于0！")
+            return;
+        }
+        if ($('#title').val().trim() == "") {
+            bootbox.alert("title不能为空！")
+            return;
+        }
+        if ($('#url').val().trim() == "") {
+            bootbox.alert("url不能为空！")
+            return;
+        }
+        $('#dataForm').submit();
+    }
+    
+</script>
+<form action="/Menu_Second/Add" method="post" id="dataForm" class="form-horizontal">
+    <div class="form-group">
+        <label for="orderId"  class="col-md-1 required">顺序</label>
+        <div class="col-md-3">
+            <input id="orderId" class="form-control" name="orderId" type="number" value="1"/>
+        </div>
+        <label for="title" class="col-md-1 required">title</label>
+        <div class="col-md-3">
+            <input id="title" class="form-control" name="title" type="text" />
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="url" class="col-md-1 required">url</label>
+        <div class="col-md-3">
+            <input id="url" class="form-control" name="url" type="text" value="#"/>
+        </div>
+    
+        <label for="open" class="col-md-1">open</label>
+        <div class="col-md-3">
+            <select class="chosen-select form-control" id="open" name="open">
+                <option value="false">false</option>
+                <option value="true">true</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="htmlStr" class="col-md-1">html</label>
+        <div class="col-md-3">
+            <input id="htmlStr" class="form-control" name="htmlStr" type="text" />
+        </div>
+        <label for="parentMenuId" class="col-md-1 required">上级菜单</label>
+        <div class="col-md-3">
+            <select class="chosen-select form-control" id="parentMenuId" name="parentMenuId" >
+                @foreach (var item in Html.parentMenuInfo(MenuLevel.First_Level))
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+            </select>
+        </div>
+    </div>
+    <button class="btn btn-primary btn-block" type="button" onclick="submitForm()">提交</button>
+</form>
+

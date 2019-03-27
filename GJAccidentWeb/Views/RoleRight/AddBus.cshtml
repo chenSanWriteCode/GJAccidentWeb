@@ -1,0 +1,70 @@
+﻿@using GJAccidentWeb.Infrastructure
+@using GJAccidentWeb.Models.QueryModels
+@model RoleRightQueryModel
+@{
+    ViewBag.Title = "增加角色数据权限权限";
+}
+<script type="text/javascript">
+    function changeBus() {
+        var lineId = $('#lineId').val();
+        setLineControl(lineId);
+    }
+    function setLineControl(lineId) {
+        $.post('/CommonTool/getBusInfoNotInList', { lineId: lineId, roleId: '@Model.roleId' }, function (data) {
+            var line = JSON.parse(data)
+            $('#rightId').empty();
+            $.each(line, function () {
+                $('<option value="' + this.busId + '">' + this.busName + '</option>').appendTo("#rightId")
+            })
+            $("#rightId").trigger("chosen:updated");
+        })
+    }
+</script>
+<span style="color:red">
+    @Html.ValidationSummary(false)
+</span>
+
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align:center">
+        @Html.roleInfo()[Model.roleId]
+    </div>
+    <div class="panel-body">
+        <form action="/RoleRight/Add" method="post" id="dataForm" class="form-horizontal">
+            <input hidden="hidden" name="roleId" value="@Model.roleId" />
+            <div class="form-group">
+                <label for="lineId" class="col-md-1 required">线路名称</label>
+                <div class="col-md-3">
+                    <select class="chosen-search form-control" name="lineId" id="lineId" onchange="changeBus()">
+                        @foreach (var item in Html.lineInfo_All())
+                        {
+                            if (item.Value == Model.lineId)
+                            {
+                                <option value="@item.Value" selected="selected">@item.Key</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Key</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <label for="rightId" class="col-md-1 required">公交车</label>
+                <div class="col-md-3">
+                    <select class="chosen-search form-control" name="rightId" id="rightId">
+                        @foreach (var item in Html.getBusInfoNotInList(Model.roleId, Model.lineId))
+                        {
+                            <option value="@item.Key">@item.Value</option>
+                        }
+                    </select>
+                </div>
+            
+                <div class="col-md-1">
+                    <button class="btn btn-primary btn-block" type="submit">提交</button>
+                </div>
+                @Html.ActionLink("返回", "Search", new { roleId = Model.roleId }, new { @class = "btn btn-primary" })
+            </div>
+
+        </form>
+    </div>
+</div>
+

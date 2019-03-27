@@ -1,0 +1,115 @@
+﻿@using GJAccidentWeb.Entity
+@using GJAccidentWeb.Infrastructure
+@model Pager<List<Role>>
+@{
+    ViewBag.Title = "角色管理";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#myDataTable').datagrid({
+            sortable: false,
+            checkable:true,
+            selectable:false,
+            height:410
+        });
+        $('#dataPager').pager({
+            page: @Model.page,
+            recTotal: @Model.recTotal,
+            recPerPage:@Model.recPerPage,
+            onPageChange: function(state, oldState) {
+                if (typeof(oldState.page)!="undefined" && state.page !== oldState.page) {
+                    var href = $('#searchForm').attr("action");
+                    href = href + "?page=" + state.page;
+                    $('#searchForm').attr("action", href);
+                    $('#searchForm').submit();
+                }
+            }
+        });
+    })
+    function deleteModel(id){
+        bootbox.confirm("确认要删除本角色吗？",function(result){
+            if (result) {
+                $('#modelId').val(id);
+                $('#deleteForm').submit();
+            }
+        })
+    }
+    function mamageUsers(){
+        var myDataGrid = $('#myDataTable').data('zui.datagrid');
+        var data = myDataGrid.getCheckItems();
+        if (data.length!=1) {
+            bootbox.alert("请选择一个角色进行管理用户");
+            return ;
+        }
+        location.href="/Role/ManageUsers?roleId="+data[0][7]+"&roleName="+data[0][0];
+    }
+</script>
+<form action="/Role/Index" id="searchForm" method="post" class="form-horizontal">
+    <div class="form-group">
+        @Html.ActionLink("增加角色", "Add", null, new { @class = "btn btn-warning" })
+        <button class="btn btn-warning" type="button" onclick="mamageUsers()">管理用户角色</button>
+    </div>
+</form>
+
+<form action="/Role/Delete" method="post" id="deleteForm" hidden="hidden">
+    <input name="id" id="modelId" />
+</form>
+<table class="table" id="myDataTable">
+    <thead>
+        <tr>
+            <th>角色名</th>
+            <th>数据权限级别</th>
+            <th>操作</th>
+            <th>创建人</th>
+            <th>创建日期</th>
+            <th>最后修改人</th>
+            <th>最后修改日期</th>
+            
+            <th>ID标识</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.data != null)
+        {
+            foreach (var item in Model.data)
+            {
+                <tr>
+                    <td>@item.roleName</td>
+                    <td>@Html.getRightLevel()[item.level]</td>
+                    <td>
+                        @Html.ActionLink("修改", "Update", new { id = @item.id }, new { @class = "btn btn-warning" })
+                        <button class="btn btn-danger" type="button" onclick="deleteModel('@item.id')">删除</button>
+                    </td>
+                    <td>@item.createdBy</td>
+                    <td>@item.createdDate</td>
+                    <td>@item.lastUpdatedBy</td>
+                    <td>@item.lastUpdatedDate</td>
+                    <td>@item.id</td>
+                </tr>
+                @*if (!item.roleName.Contains("超级管理员"))
+                {
+                    <tr>
+                        <td>@item.roleName</td>
+                        <td>@Html.getRightLevel()[item.level]</td>
+                        <td>
+                            @Html.ActionLink("修改", "Update", new { id = @item.id }, new { @class = "btn btn-warning" })
+                            <button class="btn btn-danger" type="button" onclick="deleteModel('@item.id')">删除</button>
+                        </td>
+                        <td>@item.createdBy</td>
+                        <td>@item.createdDate</td>
+                        <td>@item.lastUpdatedBy</td>
+                        <td>@item.lastUpdatedDate</td>
+                        <td>@item.id</td>
+                    </tr>
+                }*@
+            }
+        }
+    </tbody>
+</table>
+<div>
+    <ul id="dataPager" class="pager"></ul>
+</div>
+
+
+

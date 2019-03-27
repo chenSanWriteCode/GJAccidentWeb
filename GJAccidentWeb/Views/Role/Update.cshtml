@@ -1,0 +1,42 @@
+﻿@using GJAccidentWeb.Entity
+@using GJAccidentWeb.Infrastructure
+@{
+    ViewBag.Title = "修改角色";
+}
+@model Role
+
+<span style="color:red">
+    @Html.ValidationSummary(false)
+</span>
+<form method="post" id="dataForm" class="form-horizontal">
+    <input hidden="hidden" name="id" value="@Model.id" />
+    <div class="form-group">
+        <label for="roleName" class="col-md-1 required">角色名</label>
+        <div class="col-md-3">
+            <input id="roleName" class="form-control" name="roleName" type="text" value="@Model.roleName" placeholder="请不要输入空格" />
+        </div>
+        <label for="level" class="col-md-2 required">数据权限级别</label>
+        <div class="col-md-3">
+            <select class="chosen-select form-control" name="level">
+                @foreach (var item in Html.getRightLevel())
+                {
+                    if (Model.level == item.Key)
+                    {
+                        <option selected="selected" value="@item.Key">@item.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-md-1">
+        <button class="btn btn-primary btn-block" type="submit">提交</button>
+    </div>
+    <div class="col-md-1">
+        @Html.ActionLink("返回", "Index", null, new { @class = "btn btn-warning" })
+    </div>
+</form>
+

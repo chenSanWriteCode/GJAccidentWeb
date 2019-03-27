@@ -1,0 +1,75 @@
+﻿@using GJAccidentWeb.Entity
+@using GJAccidentWeb.Infrastructure
+@{
+    ViewBag.Title = "修改用户";
+}
+@model UserInfo
+<script type="text/javascript">
+    function deleteModel() {
+        bootbox.confirm("注销后将无法登录本系统，确认注销吗？", function (result) {
+            if (result) {
+                $('#dataForm').attr('action','/User/Delete')
+                $('#dataForm').submit();
+            }
+        })
+    }
+</script>
+<span style="color:red">
+    @Html.ValidationSummary(false)
+</span>
+<form method="post" id="dataForm" class="form-horizontal" action="/User/Update">
+    <input hidden="hidden" name="id" value="@Model.id" />
+    <div class="form-group">
+        <label for="userName" class="col-md-1 required">用户名</label>
+        <div class="col-md-3">
+            <input id="userName" class="form-control" name="userName" type="text" value="@Model.userName" placeholder="请不要输入空格"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="companyId" class="col-md-1">分公司</label>
+        <div class="col-md-3">
+            <select class="chosen-select form-control" id="companyId" name="companyId">
+                @foreach (var item in Html.companyInfo_All(ModelType.DefaultModel))
+                {
+                    if (item.Value == Model.companyId)
+                    {
+                        <option selected="selected" value="@item.Value">@item.Key</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Key</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="userNO" class="col-md-1">工号</label>
+        <div class="col-md-3">
+            <input id="userNO" class="form-control" name="userNO" type="text" value="@Model.userNo" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="phoneNum" class="col-md-1">手机号</label>
+        <div class="col-md-3">
+            <input id="phoneNum" class="form-control" name="phoneNum" type="text" value="@Model.phoneNum"/>
+        </div>
+    </div>
+    
+    <div class="col-md-1">
+        <button class="btn btn-primary btn-block" type="submit">提交修改</button>
+    </div>
+    <div class="col-md-1">
+        @Html.ActionLink("密码修改", "ChangePassword", new { id =Model.id},new { @class="btn btn-primary btn-block"})
+    </div>
+    <div class="col-md-1">
+        @Html.ActionLink("增加新用户", "Add", null, new { @class = "btn btn-warning btn-block" })
+    </div>
+    <div class="col-md-1">
+        <button type="button" class="btn btn-warning btn-block" onclick="deleteModel()">注销本用户</button>
+    </div>
+</form>
+
+
+

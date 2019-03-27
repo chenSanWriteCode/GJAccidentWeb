@@ -1,0 +1,29 @@
+﻿@using GJAccidentWeb.Infrastructure
+@{
+    ViewBag.Title = "增加角色";
+}
+<span style="color:red">
+    @Html.ValidationSummary(false)
+</span>
+<form action="/Role/Add" method="post" id="dataForm" class="form-horizontal">
+    <div class="form-group">
+        <label for="roleName" class="col-md-1 required">角色名</label>
+        <div class="col-md-3">
+            <input id="roleName" class="form-control" name="roleName" type="text" placeholder="非空格字符" />
+        </div>
+        <label for="level" class="col-md-2 required">数据权限级别</label>
+        <div class="col-md-3">
+            <select class="chosen-select form-control" name="level" id="level">
+                @foreach (var item in Html.getRightLevel())
+                {
+                    <option value="@item.Key">@item.Value</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-md-1">
+        <button class="btn btn-primary btn-block" type="submit">提交</button>
+    </div>
+
+</form>
+

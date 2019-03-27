@@ -1,0 +1,75 @@
+﻿@using GJAccidentWeb.Entity
+@using GJAccidentWeb.Infrastructure
+@model Pager<List<UserInfo>>
+@{
+    ViewBag.Title = "用户管理";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#myDataTable').datagrid({
+            sortable: false,
+            checkable:true,
+            selectable:false,
+            height:410
+        });
+        $('#dataPager').pager({
+            page: @Model.page,
+            recTotal: @Model.recTotal,
+            recPerPage:@Model.recPerPage,
+            onPageChange: function(state, oldState) {
+                if (typeof(oldState.page)!="undefined" && state.page !== oldState.page) {
+                    var href = $('#searchForm').attr("action");
+                    href = href + "?page=" + state.page;
+                    $('#searchForm').attr("action", href);
+                    $('#searchForm').submit();
+                }
+            }
+        });
+    })
+
+</script>
+<form action="/User/Index" id="searchForm" method="post" class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-1">
+            @Html.ActionLink("增加", "Add", null, new { @class = "btn btn-warning btn-block" })
+        </div>
+    </div>
+</form>
+
+
+<table class="table" id="myDataTable">
+    <thead>
+        <tr>
+            <th>用户名</th>
+            <th>创建人</th>
+            <th>创建日期</th>
+            <th>最后修改人</th>
+            <th>最后修改日期</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.data != null)
+        {
+            foreach (var item in Model.data)
+            {
+                <tr>
+
+                    <td>@item.userName</td>
+                    <td>@item.createdBy</td>
+                    <td>@item.createdDate</td>
+                    <td>@item.lastUpdatedBy</td>
+                    <td>@item.lastUpdatedDate</td>
+                    @*<td>
+                        @Html.ActionLink("修改", "Update", new { id = @item.id }, new { @class = "btn btn-warning" })
+                        <button class="btn btn-danger" type="button" onclick="deleteModel('@item.id')">删除</button>
+                    </td>*@
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div>
+    <ul id="dataPager" class="pager"></ul>
+</div>
+

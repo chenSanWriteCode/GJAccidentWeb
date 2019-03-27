@@ -1,0 +1,94 @@
+﻿@using GJAccidentWeb.Entity
+@using GJAccidentWeb.Infrastructure
+@{
+    ViewBag.Title = "角色数据权限管理";
+}
+@model Pager<List<RoleRight>>
+
+<script type="text/javascript">
+    $(function () {
+        $('#myDataTable').datagrid({
+            sortable: false,
+            checkable:true,
+            selectable:false,
+            height:410
+        });
+        $('#dataPager').pager({
+            page: @Model.page,
+            recTotal: @Model.recTotal,
+            recPerPage:@Model.recPerPage,
+            onPageChange: function(state, oldState) {
+                if (typeof(oldState.page)!="undefined" && state.page !== oldState.page) {
+                    var href = $('#searchForm').attr("action");
+                    href = href + "?page=" + state.page;
+                    $('#searchForm').attr("action", href);
+                    $('#searchForm').submit();
+                }
+            }
+        });
+    });
+    function addModel(){
+        location.href="/RoleRight/Add?roleId="+$('#roleId').val()
+    }
+    function deleteModel(id){
+        $('#id').val(id)
+        $('#roleId1').val($('#roleId').val())
+        $('#dataForm').submit()
+    }
+</script>
+<form id="dataForm" action="/RoleRight/Delete" method="post" hidden="hidden">
+    <input id="id" name="id" />
+    <input id="roleId1" name="roleId" />
+</form>
+<form class="form-horizontal" id="searchForm" action="/RoleRight/Search" method="post">
+    <div class="form-group">
+        <label for="roleId" class="col-md-1"> 角色:</label>
+        <div class="col-md-2">
+            <select id="roleId" name="roleId" class="chosen-select form-control">
+                @foreach (var item in Html.roleInfo())
+                {
+                    if (ViewBag.Condition.roleId == item.Key)
+                    {
+                        <option value="@item.Key" selected="selected">@item.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Key">@item.Value</option>
+                    }
+                }
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">查询</button>
+        <button class="btn btn-warning" type="button" onclick="addModel()">增加数据权限权限</button>
+    </div>
+</form>
+<table class="table" id="myDataTable">
+    <thead>
+        <tr>
+            <th>数据权限名称</th>
+            <th>操作</th>
+            <th>创建人</th>
+            <th>创建时间</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.data != null)
+        {
+            foreach (var item in Model.data)
+            {
+                <tr>
+
+                    <td>@item.rightName</td>
+                    <td>
+                        <button class="btn btn-danger" type="button" onclick="deleteModel('@item.id')">删除</button>
+                    </td>
+                    <td>@item.createdBy</td>
+                    <td>@item.createdDate</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div>
+    <ul id="dataPager" class="pager"></ul>
+</div>

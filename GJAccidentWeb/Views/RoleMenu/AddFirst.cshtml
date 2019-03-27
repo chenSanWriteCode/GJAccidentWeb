@@ -1,0 +1,85 @@
+﻿@using GJAccidentWeb.Models.QueryModels
+@{
+    ViewBag.Title = "角色增加菜单：一级目录";
+}
+@model RoleMenuQueryModel
+
+<script type="text/javascript">
+    $(function () {
+        $('#myDataTable').datagrid({
+            sortable: false,
+            checkable:true,
+            selectable:false,
+            height:410
+        });
+        $('#dataPager').pager({
+            page: @ViewBag.Menu.page,
+            recTotal: @ViewBag.Menu.recTotal,
+            recPerPage:@ViewBag.Menu.recPerPage,
+            onPageChange: function(state, oldState) {
+                if (typeof(oldState.page)!="undefined" && state.page !== oldState.page) {
+                    $('#page').val(state.page)
+                    $('#searchForm').submit();
+                }
+            }
+        });
+
+    });
+    function addMenu(menuId){
+        $('#menuId').val(menuId);
+        $('#dataForm').submit();
+    }
+</script>
+<form id="searchForm" action="/RoleMenu/AddFirst" method="get" hidden="hidden">
+    <input name="roleId" value="@Model.roleId" />
+    <input name="page" id="page" value="@ViewBag.Menu.page" />
+</form>
+<form id="dataForm" hidden="hidden" method="post">
+    <input name="roleId" value="@Model.roleId" />
+    <input name="menuLevel" id="menuLevel"  value="@Model.menuLevel" />
+    <input name="menuId" id="menuId" />
+</form>
+
+<div class="form-group">
+    <a class="btn btn-primary" href="/RoleMenu/search?roleId=@Model.roleId">返回</a>
+</div>
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align:center">
+        一级目录
+    </div>
+    <div class="panel-body">
+        <table class="table" id="myDataTable">
+            <thead>
+                <tr>
+                    <th>title</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.Menu.data != null)
+                {
+                    foreach (var item in ViewBag.Menu.data)
+                    {
+                        <tr>
+                            <td>@item.title</td>
+                            <td>
+                                @if (item.isIn == 0)
+                                {
+                                    <button class="btn btn-warning" type="button" onclick="addMenu(@item.id)">增加</button>
+                                }
+                                else
+                                {
+                                    <span>已添加</span>
+                                }
+                                @Html.ActionLink("子目录", "AddSecond", new { roleId = Model.roleId, parentMenuId = item.id }, new { @class = "btn btn-primary" })
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <div>
+            <ul id="dataPager" class="pager"></ul>
+        </div>
+    </div>
+</div>

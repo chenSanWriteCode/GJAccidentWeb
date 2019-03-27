@@ -1,0 +1,19 @@
+﻿@using GJAccidentWeb.Infrastructure
+@{
+    ViewBag.Title = "角色用户增加";
+}
+
+<form method="post" >
+    <input hidden="hidden" name="roleId" value="@ViewBag.RoleId" />
+    <div class="col-md-3">
+        <select class="chosen-search form-control" name="userId">
+            @foreach (var item in Html.userNotInRole(User.Identity.Name))
+            {
+                <option value="@item.Key">@item.Value</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-warning" >提交</button>
+    @Html.ActionLink("返回","Index",null,new { @class="btn btn-primary"})
+</form>
+

@@ -1,0 +1,37 @@
+﻿@using GJAccidentWeb.Infrastructure
+@using GJAccidentWeb.Models.QueryModels
+@model RoleRightQueryModel
+@{
+    ViewBag.Title = "增加角色数据权限权限";
+}
+<span style="color:red">
+    @Html.ValidationSummary(false)
+</span>
+
+<div class="panel panel-primary">
+    <div class="panel-heading" style="text-align:center">
+        @Html.roleInfo()[Model.roleId]
+    </div>
+    <div class="panel-body">
+        <form action="/RoleRight/Add" method="post" id="dataForm" >
+            <input hidden="hidden" name="roleId" value="@Model.roleId" />
+            <div class="form-group">
+                <label for="rightId" class="col-md-1 required">部门名称</label>
+                <div class="col-md-3">
+                    <select class="chosen-search form-control" name="rightId" id="rightId">
+                        @foreach (var item in Html.getCompanyNotInList(@Model.roleId))
+                        {
+                            <option value="@item.Key">@item.Value</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-primary btn-block" type="submit">提交</button>
+                </div>
+                @Html.ActionLink("返回", "Search", new { roleId = Model.roleId }, new { @class = "btn btn-primary" })
+            </div>
+            
+        </form>
+    </div>
+</div>
+

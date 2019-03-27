@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+@using GJAccidentWeb.Infrastructure
+<head>
+    @Scripts.Render("~/bundles/jquery")
+    @Styles.Render("~/bundles/zuiCSS")
+    @Scripts.Render("~/bundles/zuiJS")
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        $(function () {
+            initControl();
+            $.post("/Common/getMenuInfo", function (data) {
+                var tree = $('#treeMenu').data('zui.tree')
+                if (data.length != 0) {
+                    tree.reload(data);
+                } else {
+                    $('#treeMenu').empty()
+                }
+            })
+            //$('input').attr('autocomplete', 'off')
+            // 选择时间和日期
+            
+        })
+
+        function initControl() {
+
+            $('select.chosen-select').chosen({
+                no_results_text: '没有找到',    // 当检索时没有找到匹配项时显示的提示文本
+                disable_search_threshold: 10, // 10 个以下的选择项则不显示检索框
+                search_contains: false         // 从任意位置开始检索
+            });
+            $('.form-datetime').attr('autocomplete', 'off')
+            // 选择时间和日期
+            $(".form-datetime").datetimepicker(
+            {
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1,
+                format: "yyyy-mm-dd hh:ii:ss"
+            })
+            //  initialState: 'preserve'
+            //var options = { initialState: 'normal' }
+            $('#treeMenu').tree();
+        }
+    </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+</head>
+<body>
+    <div class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                @Html.ActionLink("公交事故报警系统", "Index", "Accident", null, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>@Html.ActionLink("欢迎您 " + @User.Identity.Name, "Update", "User",new { id = Html.getUserIdByName(User.Identity.Name) },null)</li>
+                    <li>@Html.ActionLink("注销", "LogOff", "Account")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div>
+        <nav class="menu" data-ride="menu" id="tabsMenu" style="width:15%;float:left">
+            <ul id="treeMenu" class="tree tree-menu"></ul>
+        </nav><div class="panel" style="width:85%;float:right">
+            @RenderBody()
+           
+        </div>
+        
+    </div>
+
+</body>
+</html>

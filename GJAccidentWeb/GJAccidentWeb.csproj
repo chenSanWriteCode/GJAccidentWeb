@@ -1,0 +1,503 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A1D54F5A-4DC5-4855-ADAF-2B80E611D49E}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GJAccidentWeb</RootNamespace>
+    <AssemblyName>GJAccidentWeb</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NPOI, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OOXML.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OpenXml4Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.4.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.4.1\lib\net45\NPOI.OpenXmlFormats.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.122.18.3, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\packages\Oracle.ManagedDataAccess.18.3.0\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Abstractions, Version=4.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Abstractions.4.0.2\lib\net45\Unity.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Unity.Container, Version=5.9.3.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Container.5.9.3\lib\net45\Unity.Container.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Unity.Mvc, Version=5.9.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.Mvc.5.9.2\lib\net45\Unity.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="App_Start\UnityMvcActivator.cs" />
+    <Compile Include="Controllers\AccidentController.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\Menu_FirstController.cs" />
+    <Compile Include="Controllers\Menu_SecondController.cs" />
+    <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\RoleMenuController.cs" />
+    <Compile Include="Controllers\RoleRightController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Dao\IAccidentDao.cs" />
+    <Compile Include="Dao\ICommonDao.cs" />
+    <Compile Include="Dao\IDao.cs" />
+    <Compile Include="Dao\IMenuDao.cs" />
+    <Compile Include="Dao\IRoleDao.cs" />
+    <Compile Include="Dao\IRoleMenuDao.cs" />
+    <Compile Include="Dao\IRoleRightDao.cs" />
+    <Compile Include="Dao\IUserDao.cs" />
+    <Compile Include="Dao\LayerDao\AccidentDao.cs" />
+    <Compile Include="Dao\LayerDao\CommonDao.cs" />
+    <Compile Include="Dao\LayerDao\MenuDao.cs" />
+    <Compile Include="Dao\LayerDao\RoleDao.cs" />
+    <Compile Include="Dao\LayerDao\RoleMenuDao.cs" />
+    <Compile Include="Dao\LayerDao\RoleRightDao.cs" />
+    <Compile Include="Dao\LayerDao\UserDao.cs" />
+    <Compile Include="Entity\Accident.cs" />
+    <Compile Include="Entity\Common.cs" />
+    <Compile Include="Entity\Menu.cs" />
+    <Compile Include="Entity\Role.cs" />
+    <Compile Include="Entity\RoleMenu.cs" />
+    <Compile Include="Entity\RoleRight.cs" />
+    <Compile Include="Entity\UserInfo.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\BaseDataHelper.cs" />
+    <Compile Include="Infrastructure\BeanHelper.cs" />
+    <Compile Include="Infrastructure\CommonTool.cs" />
+    <Compile Include="Infrastructure\ExcelHelper.cs" />
+    <Compile Include="Infrastructure\ORACLEHelper.cs" />
+    <Compile Include="Infrastructure\Pager.cs" />
+    <Compile Include="Infrastructure\Result.cs" />
+    <Compile Include="Models\AccidentExportModel.cs" />
+    <Compile Include="Models\AccidentModel.cs" />
+    <Compile Include="Models\AccidentQueryModel.cs" />
+    <Compile Include="Models\MenuModel.cs" />
+    <Compile Include="Models\QueryModels\QueryModel.cs" />
+    <Compile Include="Models\QueryModels\RoleMenuQueryModel.cs" />
+    <Compile Include="Models\QueryModels\RoleRightQueryModel.cs" />
+    <Compile Include="Models\QueryModels\RoleToUsersQueryModel.cs" />
+    <Compile Include="Models\RoleModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IAccidentService.cs" />
+    <Compile Include="Services\IAccountService.cs" />
+    <Compile Include="Services\ICommonService.cs" />
+    <Compile Include="Services\IMenuService.cs" />
+    <Compile Include="Services\IRoleMenuService.cs" />
+    <Compile Include="Services\IRoleRightService.cs" />
+    <Compile Include="Services\IRoleService.cs" />
+    <Compile Include="Services\IService.cs" />
+    <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Services\ServiceImpl\AccidentServiceImpl.cs" />
+    <Compile Include="Services\ServiceImpl\AccountServiceImpl.cs" />
+    <Compile Include="Services\ServiceImpl\CommonServiceImpl.cs" />
+    <Compile Include="Services\ServiceImpl\MenuServiceImpl.cs" />
+    <Compile Include="Services\ServiceImpl\RoleMenuServiceImpl.cs" />
+    <Compile Include="Services\ServiceImpl\RoleRightServiceImpl.cs" />
+    <Compile Include="Services\ServiceImpl\RoleServiceImpl.cs" />
+    <Compile Include="Services\ServiceImpl\UserServiceImpl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\dist\fonts\zenicon.eot" />
+    <Content Include="Scripts\dist\fonts\zenicon.ttf" />
+    <Content Include="Scripts\dist\fonts\zenicon.woff" />
+    <Content Include="Scripts\dist\lib\kindeditor\plugins.zip" />
+    <Content Include="Scripts\dist\lib\kindeditor\README.md" />
+    <None Include="Properties\PublishProfiles\AccidentWeb.pubxml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\dist\css\zui-theme.css" />
+    <Content Include="Scripts\dist\css\zui-theme.min.css" />
+    <Content Include="Scripts\dist\css\zui.css" />
+    <Content Include="Scripts\dist\css\zui.lite.css" />
+    <Content Include="Scripts\dist\css\zui.lite.min.css" />
+    <Content Include="Scripts\dist\css\zui.min.css" />
+    <Content Include="Scripts\dist\fonts\zenicon.svg" />
+    <Content Include="Scripts\dist\js\zui.js" />
+    <Content Include="Scripts\dist\js\zui.lite.js" />
+    <Content Include="Scripts\dist\js\zui.lite.min.js" />
+    <Content Include="Scripts\dist\js\zui.min.js" />
+    <Content Include="Scripts\dist\lib\array\zui.array.js" />
+    <Content Include="Scripts\dist\lib\array\zui.array.min.js" />
+    <Content Include="Scripts\dist\lib\board\zui.board.css" />
+    <Content Include="Scripts\dist\lib\board\zui.board.js" />
+    <Content Include="Scripts\dist\lib\board\zui.board.min.css" />
+    <Content Include="Scripts\dist\lib\board\zui.board.min.js" />
+    <Content Include="Scripts\dist\lib\bootbox\bootbox.css" />
+    <Content Include="Scripts\dist\lib\bootbox\bootbox.js" />
+    <Content Include="Scripts\dist\lib\bootbox\bootbox.min.css" />
+    <Content Include="Scripts\dist\lib\bootbox\bootbox.min.js" />
+    <Content Include="Scripts\dist\lib\calendar\zui.calendar.css" />
+    <Content Include="Scripts\dist\lib\calendar\zui.calendar.js" />
+    <Content Include="Scripts\dist\lib\calendar\zui.calendar.min.css" />
+    <Content Include="Scripts\dist\lib\calendar\zui.calendar.min.js" />
+    <Content Include="Scripts\dist\lib\chart\zui.chart.js" />
+    <Content Include="Scripts\dist\lib\chart\zui.chart.min.js" />
+    <Content Include="Scripts\dist\lib\chosenicons\zui.chosenicons.css" />
+    <Content Include="Scripts\dist\lib\chosenicons\zui.chosenicons.js" />
+    <Content Include="Scripts\dist\lib\chosenicons\zui.chosenicons.min.css" />
+    <Content Include="Scripts\dist\lib\chosenicons\zui.chosenicons.min.js" />
+    <Content Include="Scripts\dist\lib\chosen\chosen.css" />
+    <Content Include="Scripts\dist\lib\chosen\chosen.js" />
+    <Content Include="Scripts\dist\lib\chosen\chosen.min.css" />
+    <Content Include="Scripts\dist\lib\chosen\chosen.min.js" />
+    <Content Include="Scripts\dist\lib\clipboard\clipboard.js" />
+    <Content Include="Scripts\dist\lib\clipboard\clipboard.min.js" />
+    <Content Include="Scripts\dist\lib\colorpicker\zui.colorpicker.css" />
+    <Content Include="Scripts\dist\lib\colorpicker\zui.colorpicker.js" />
+    <Content Include="Scripts\dist\lib\colorpicker\zui.colorpicker.min.css" />
+    <Content Include="Scripts\dist\lib\colorpicker\zui.colorpicker.min.js" />
+    <Content Include="Scripts\dist\lib\colorset.js\zui.colorset.js" />
+    <Content Include="Scripts\dist\lib\colorset.js\zui.colorset.min.js" />
+    <Content Include="Scripts\dist\lib\dashboard\zui.dashboard.css" />
+    <Content Include="Scripts\dist\lib\dashboard\zui.dashboard.js" />
+    <Content Include="Scripts\dist\lib\dashboard\zui.dashboard.min.css" />
+    <Content Include="Scripts\dist\lib\dashboard\zui.dashboard.min.js" />
+    <Content Include="Scripts\dist\lib\datagrid\zui.datagrid.css" />
+    <Content Include="Scripts\dist\lib\datagrid\zui.datagrid.js" />
+    <Content Include="Scripts\dist\lib\datagrid\zui.datagrid.min.css" />
+    <Content Include="Scripts\dist\lib\datagrid\zui.datagrid.min.js" />
+    <Content Include="Scripts\dist\lib\datatable\zui.datatable.css" />
+    <Content Include="Scripts\dist\lib\datatable\zui.datatable.js" />
+    <Content Include="Scripts\dist\lib\datatable\zui.datatable.min.css" />
+    <Content Include="Scripts\dist\lib\datatable\zui.datatable.min.js" />
+    <Content Include="Scripts\dist\lib\datetimepicker\datetimepicker.css" />
+    <Content Include="Scripts\dist\lib\datetimepicker\datetimepicker.js" />
+    <Content Include="Scripts\dist\lib\datetimepicker\datetimepicker.min.css" />
+    <Content Include="Scripts\dist\lib\datetimepicker\datetimepicker.min.js" />
+    <Content Include="Scripts\dist\lib\hotkey\hotkey.js" />
+    <Content Include="Scripts\dist\lib\hotkey\hotkey.min.js" />
+    <Content Include="Scripts\dist\lib\ieonly\excanvas.js" />
+    <Content Include="Scripts\dist\lib\ieonly\html5shiv.js" />
+    <Content Include="Scripts\dist\lib\ieonly\respond.js" />
+    <Content Include="Scripts\dist\lib\imgcutter\zui.imgcutter.css" />
+    <Content Include="Scripts\dist\lib\imgcutter\zui.imgcutter.js" />
+    <Content Include="Scripts\dist\lib\imgcutter\zui.imgcutter.min.css" />
+    <Content Include="Scripts\dist\lib\imgcutter\zui.imgcutter.min.js" />
+    <Content Include="Scripts\dist\lib\imgready\imgready.js" />
+    <Content Include="Scripts\dist\lib\imgready\imgready.min.js" />
+    <Content Include="Scripts\dist\lib\jquery\jquery.cookie.js" />
+    <Content Include="Scripts\dist\lib\jquery\jquery.js" />
+    <Content Include="Scripts\dist\lib\kindeditor\kindeditor.css" />
+    <Content Include="Scripts\dist\lib\kindeditor\kindeditor.js" />
+    <Content Include="Scripts\dist\lib\kindeditor\kindeditor.min.css" />
+    <Content Include="Scripts\dist\lib\kindeditor\kindeditor.min.js" />
+    <Content Include="Scripts\dist\lib\kindeditor\lang\en.js" />
+    <Content Include="Scripts\dist\lib\kindeditor\lang\zh_CN.js" />
+    <Content Include="Scripts\dist\lib\kindeditor\lang\zh_TW.js" />
+    <Content Include="Scripts\dist\lib\kindeditor\themes\default\default.png" />
+    <Content Include="Scripts\dist\lib\migrate1.2\zui.migrate1.2.js" />
+    <Content Include="Scripts\dist\lib\migrate1.2\zui.migrate1.2.min.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-apollo.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-basic.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-clj.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-css.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-dart.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-erlang.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-go.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-hs.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-lisp.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-llvm.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-lua.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-matlab.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-ml.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-mumps.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-n.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-pascal.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-proto.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-r.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-rd.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-scala.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-sql.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-tcl.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-tex.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-vb.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-vhdl.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-wiki.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-xq.js" />
+    <Content Include="Scripts\dist\lib\prettify\lang-yaml.js" />
+    <Content Include="Scripts\dist\lib\prettify\prettify.css" />
+    <Content Include="Scripts\dist\lib\prettify\prettify.js" />
+    <Content Include="Scripts\dist\lib\prettify\run_prettify.js" />
+    <Content Include="Scripts\dist\lib\selectable\zui.selectable.js" />
+    <Content Include="Scripts\dist\lib\selectable\zui.selectable.min.js" />
+    <Content Include="Scripts\dist\lib\sortable\zui.sortable.js" />
+    <Content Include="Scripts\dist\lib\sortable\zui.sortable.min.js" />
+    <Content Include="Scripts\dist\lib\tabs\zui.tabs.css" />
+    <Content Include="Scripts\dist\lib\tabs\zui.tabs.js" />
+    <Content Include="Scripts\dist\lib\tabs\zui.tabs.min.css" />
+    <Content Include="Scripts\dist\lib\tabs\zui.tabs.min.js" />
+    <Content Include="Scripts\dist\lib\treemap\zui.treemap.css" />
+    <Content Include="Scripts\dist\lib\treemap\zui.treemap.js" />
+    <Content Include="Scripts\dist\lib\treemap\zui.treemap.min.css" />
+    <Content Include="Scripts\dist\lib\treemap\zui.treemap.min.js" />
+    <Content Include="Scripts\dist\lib\ueditor\ueditor.css" />
+    <Content Include="Scripts\dist\lib\ueditor\ueditor.min.css" />
+    <Content Include="Scripts\dist\lib\uploader\Moxie.swf" />
+    <Content Include="Scripts\dist\lib\uploader\Moxie.xap" />
+    <Content Include="Scripts\dist\lib\uploader\zui.uploader.css" />
+    <Content Include="Scripts\dist\lib\uploader\zui.uploader.js" />
+    <Content Include="Scripts\dist\lib\uploader\zui.uploader.min.css" />
+    <Content Include="Scripts\dist\lib\uploader\zui.uploader.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Accident\Index.cshtml" />
+    <Content Include="Views\Shared\Success.cshtml" />
+    <Content Include="Views\Accident\Add.cshtml" />
+    <Content Include="Views\Accident\Update.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Menu_First\Add.cshtml" />
+    <Content Include="Views\Menu_First\Index.cshtml" />
+    <Content Include="Views\Menu_First\Update.cshtml" />
+    <Content Include="Views\Menu_Second\Add.cshtml" />
+    <Content Include="Views\Menu_Second\Index.cshtml" />
+    <Content Include="Views\Menu_Second\Update.cshtml" />
+    <Content Include="Views\RoleMenu\AddFirst.cshtml" />
+    <Content Include="Views\RoleMenu\AddSecond.cshtml" />
+    <Content Include="Views\RoleMenu\Index.cshtml" />
+    <Content Include="Views\RoleRight\AddBus.cshtml" />
+    <Content Include="Views\RoleRight\AddCompany.cshtml" />
+    <Content Include="Views\RoleRight\AddLine.cshtml" />
+    <Content Include="Views\RoleRight\Index.cshtml" />
+    <Content Include="Views\Role\Add.cshtml" />
+    <Content Include="Views\Role\AddUser.cshtml" />
+    <Content Include="Views\Role\Index.cshtml" />
+    <Content Include="Views\Role\ManageUsers.cshtml" />
+    <Content Include="Views\Role\Update.cshtml" />
+    <Content Include="Views\User\Add.cshtml" />
+    <Content Include="Views\User\changePassword.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\Update.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Views\Common\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="packages.config" />
+    <None Include="Project_Readme.html" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>16199</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:16199/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

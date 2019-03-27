@@ -1,0 +1,23 @@
+﻿
+<div class="alert alert-warning" style="text-align:center">
+    <div class="alert alert-warning with-icon">
+        <i class="icon-warning-sign"></i>
+        <div class="content">
+            @if (ViewBag.Msg == null)
+            {
+                <div class="content">
+                    现了不可预期的错误，请刷新重试
+                </div>
+            }
+            else
+            {
+                <div class="content">
+                    @ViewBag.Msg
+                </div>
+            }
+        </div>
+    </div>
+    <a class="btn btn-primary btn-block" href="@ViewBag.ReturnUrl">OK</a>
+</div>
+
+

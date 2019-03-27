@@ -1,0 +1,607 @@
+﻿@{
+    ViewBag.Title = "公交事故报警系统";
+}
+@using GJAccidentWeb.Infrastructure
+
+<script type="text/javascript">
+    var IsUnder = ["所有","是", "否"]
+    $(function () {
+        $('#dataTable').datagrid({
+            sortable: false,
+            checkable: true,
+            selectable: false,
+            height: 410,
+            states:{
+                fixedRightFrom:13
+            }
+        });
+        $('#dataPager').pager({
+            page: @Model.page,
+            recTotal: @Model.recTotal,
+            recPerPage:@Model.recPerPage,
+            onPageChange: function (state, oldState) {
+                if (typeof (oldState.page) != "undefined" && state.page !== oldState.page) {
+                    var href = $('#searchForm').attr("action");
+                    href = href + "?page=" + state.page;
+                    $('#searchForm').attr("action", href);
+                    $('#searchForm').submit();
+                }
+            }
+        });
+        $.each(IsUnder, function (index, value) {
+            if (value == '@ViewBag.Condition.isUnder') {
+                $('<option selected="selected" >' + value + '</option>').appendTo("#isUnder");
+            }
+            else {
+                $('<option>' + value + '</option>').appendTo("#isUnder");
+            }
+        });
+        changeCarAndUD();
+    })
+    function changeLine(){
+        $.ajax({
+            url:'/Common/LineInfo',
+            data:{'companyId':$('#companyId').val()},
+            type:'post',
+            dataType:'json',
+            success:function(data,status){
+                if (data!=null) {
+                    $('#lineId').empty();
+                    $.each(data,function(Index,value){
+                        if (value == '@ViewBag.Condition.lineId') {
+                            $('<option selected="selected" value="' + value + '">' + Index + '</option>').appendTo("#lineId");
+                        }
+                        else {
+                            $('<option value="' + value + '">' + Index + '</option>').appendTo("#lineId");
+                        }
+                    })
+                    $("#lineId").trigger("chosen:updated");
+                    changeCarAndUD();
+                }
+            }
+        });
+    }
+    function changeCarAndUD(){
+        //changeCar();
+        changeUD();
+    }
+    function changeUD(){
+        $.ajax({
+            url:'/Common/LineUDInfo',
+            data:{'lineId':$('#lineId').val()},
+            type:'post',
+            dataType:'json',
+            success:function(data,status){
+                if (data!=null) {
+                    $('#lineDir').empty();
+                    $.each(data,function(Index,value){
+                        if (value == '@ViewBag.Condition.lineDir') {
+                            $('<option selected="selected" value="' + value + '">' + Index + '</option>').appendTo("#lineDir");
+                        }
+                        else {
+                            $('<option value="' + value + '">' + Index + '</option>').appendTo("#lineDir");
+                        }
+                    })
+                    $("#lineDir").trigger("chosen:updated");
+                }
+            }
+        });
+    }
+    function changeCar(){
+        $.ajax({
+            url:'/Common/CarInfo',
+            data:{'lineId':$('#lineId').val()},
+            type:'post',
+            dataType:'json',
+            success:function(data,status){
+                if (data!=null) {
+                    $('#carNum').empty();
+                    $.each(data,function(Index,value){
+                        if (value == '@ViewBag.Condition.carNum') {
+                            $('<option selected="selected" value="' + value + '">' + Index + '</option>').appendTo("#carNum");
+                        } else {
+                            $('<option value="' + value + '">' + Index + '</option>').appendTo("#carNum");
+                        }
+                    })
+                    $("#carNum").trigger("chosen:updated");
+                }
+            }
+        });
+
+    }
+    function clearControl() {
+        $('input.text').val('')
+    }
+    function deleteModel(){
+        bootbox.confirm("确认要删除本事故记录么？",function(result){
+            if (result) {
+                $('#deleteForm').submit();
+            }
+        })
+
+    }
+    function watch(id){
+        $.ajax({
+            url:"/Accident/Get",
+            data:{'id':id},
+            type:'get',
+            dataType:'json',
+            success:function(result,status){
+                if (!result.success) {
+                    bootbox.alert(result.message);
+                }else {
+                    $('#detailForm input').attr('readonly',true)
+                    for (var p in result.data)
+                    {
+                        $('#detailForm').find(":input[id='" + p + "']").val(result.data[p]);
+                    }
+                    $('#accidentTime').val(ConvertJSONDateToString(result.data['accidentTime']))
+                    $('#detail').modal()
+                }
+            }
+        })
+    }
+    function ConvertJSONDateToString(jsondate) {
+        var d = new Date(parseInt(jsondate.replace("/Date(", "").replace(")/", ""), 10));
+        var  resDate = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+        return resDate;
+    }
+    function exportExcel(){
+        $('#searchForm').attr('action','/Accident/Export');
+        $('#searchForm').submit();
+        $('#searchForm').attr('action','/Accident/Search');
+        //$.ajax({
+        //    url:'/Accident/Export',
+        //    data:$('#searchForm').serialize(),
+        //    type:'post',
+        //    success:function(data,status){
+        //        bootbox.alert(status);
+        //        bootbox.alert(data);
+        //    }
+            
+        //})
+    }
+</script>
+<a data-toggle="collapse" href="#conditionContent" class="btn btn-primary">
+    查询条件
+</a>
+@Html.ActionLink("增加", "Add", "Accident", new { @class = "btn btn-primary" })
+<button class="btn btn-primary" type="button" onclick="exportExcel()">导出</button>
+<div class="panel panel-primary">
+    <div id="conditionContent" class="panel-collapse collapse">
+        <div class="panel-body">
+            <form id="searchForm" class="form-horizontal" method="post" action="/Accident/Search">
+                <div class="form-group">
+                    <label class="col-md-1">分公司</label>
+                    <div class="col-md-2">
+                        <select id="companyId" name="dwId" class="chosen-search form-control" onchange="changeLine()">
+                            @foreach (var item in Html.companyInfo(User.Identity.Name))
+                            {
+                                if (ViewBag.Condition.dwId == item.Value)
+                                {
+                                    <option value="@item.Value" selected="selected">@item.Key</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Key</option>
+                                }
+
+                            }
+                        </select>
+                    </div>
+                    <label class="col-md-1">线路</label>
+                    <div class="col-md-2">
+                        <select name="lineId" id="lineId" class="chosen-search form-control"  onchange="changeCarAndUD()">
+                            @foreach (var item in Html.lineInfo(User.Identity.Name))
+                            {
+                                if (ViewBag.Condition.lineId == item.Value)
+                                {
+                                    <option selected="selected" value="@item.Value">@item.Key</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Value">@item.Key</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <label class="col-md-1">车号</label>
+                    <div class="col-md-2">
+                        <input name="carNum" id="carNum" class="form-control" value="@ViewBag.Condition.carNum"/>
+                        @*<select name="carNum" id="carNum" class="chosen-search form-control"></select>*@
+                    </div>
+                    <label class="col-md-1">线路走向</label>
+                    <div class="col-md-2">
+                        <select name="lineDir" id="lineDir" class="chosen-search form-control"></select>
+                    </div>
+                    @*<label class="col-md-1">天气</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" name="weather" value="@ViewBag.Condition.weather" />
+                        </div>*@
+                </div>
+                <div class="form-group">
+                    @*<label class="col-md-1">路况</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" name="roadCondition" value="@ViewBag.Condition.roadCondition" />
+                        </div>*@
+                    <label class="col-md-1">地点</label>
+                    <div class="col-md-2">
+                        <input class="text form-control" name="area" value="@ViewBag.Condition.area" />
+                    </div>
+                    <label class="col-md-1">车型</label>
+                    <div class="col-md-2">
+                        <input class="text form-control" name="carType" value="@ViewBag.Condition.carType" />
+                    </div>
+                    <label class="col-md-1">开始时间</label>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control form-datetime" name="accidentTimeStart" value="@ViewBag.Condition.accidentTimeStart" />
+                    </div>
+                    <label class="col-md-1">结束时间</label>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control form-datetime" name="accidentTimeEnd" value="@ViewBag.Condition.accidentTimeEnd" />
+                    </div>
+                </div>
+                @* <hr />*@
+                <div class="form-group">
+
+                    <label class="col-md-1">事故责任</label>
+                    <div class="col-md-2">
+                        <select name="accidentDuty" class="chosen-search form-control">
+                            <option value="">所有</option>
+                            <option>全责</option>
+                            <option>主责</option>
+                            <option>次责</option>
+                            <option>同责</option>
+                            <option>无责</option>
+                        </select>
+                    </div>
+                    @*<label class="col-md-1">损失情况</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" name="accidentLost" value="@ViewBag.Condition.accidentLost" />
+                        </div>*@
+                    <label class="col-md-1">是否私了</label>
+                    <div class="col-md-2">
+                        <select name="isUnder" id="isUnder" class="chosen-search form-control"></select>
+                    </div>
+                    <label class="col-md-1">时速</label>
+                    <div class="col-md-1">
+                        <input type="number" class="text form-control" name="speedMin" placeholder="最小" value="@ViewBag.Condition.speedMin" />
+                    </div>
+                    <div class="col-md-1">
+                        <input type="number" class="text form-control" name="speedMax" placeholder="最大" value="@ViewBag.Condition.speedMax" />
+                    </div>
+                    <label class="col-md-1">驾驶员</label>
+                    <div class="col-md-2">
+                        <input class="text form-control" name="driverName" value="@ViewBag.Condition.driverName" />
+                    </div>
+                </div>
+                @*<div class="form-group">
+
+                    </div>*@
+                @*<hr />*@
+                <div class="form-group">
+
+                    <div class="col-md-1">
+                        <button class="btn btn-primary btn-block" type="submit">查询</button>
+                    </div>
+                    <div class="col-md-1">
+                        <button class="btn btn-primary btn-block" type="button" onclick="clearControl()">清空</button>
+                    </div>
+                    @*<label class="col-md-1">性别</label>
+                        <div class="col-md-2">
+                            <select name="driverSex" class="chosen-search form-control">
+                                <option value="">所有</option>
+                                <option>男</option>
+                                <option>女</option>
+                            </select>
+                        </div>
+                        <label class="col-md-1">体检情况</label>
+                        <div class="col-md-2">
+                            <select name="healthyCondition" class="chosen-search form-control">
+                                <option value="">所有</option>
+                                <option>良好</option>
+                                <option>合格</option>
+                                <option>不合格</option>
+                            </select>
+                        </div>
+                        <label class="col-md-1">婚姻情况</label>
+                        <div class="col-md-2">
+                            <select name="marriageCondition" class="chosen-search form-control">
+                                <option value="">所有</option>
+                                <option>已婚</option>
+                                <option>未婚</option>
+                            </select>
+                        </div>*@
+
+                </div>
+                @*<div class="form-group">
+                        <label class="col-md-1">年龄</label>
+                        <div class="col-md-1">
+                            <input type="number" class="text form-control" name="driverAgeMin" placeholder="最小" value="@ViewBag.Condition.driverAgeMin" />
+                        </div>
+                        <div class="col-md-1">
+                            <input type="number" class="text form-control" name="driverAgeMax" placeholder="最大" value="@ViewBag.Condition.driverAgeMax" />
+                        </div>
+                        <label class="col-md-1">驾龄</label>
+                        <div class="col-md-1">
+                            <input type="number" class="text form-control" name="drivingYearsMin" placeholder="最小" value="@ViewBag.Condition.drivingYearsMin" />
+                        </div>
+                        <div class="col-md-1">
+                            <input type="number" class="text form-control" name="drivingYearsMax" placeholder="最大" value="@ViewBag.Condition.drivingYearsMax" />
+                        </div>
+                        <label class="col-md-1">当日工作时长</label>
+                        <div class="col-md-1">
+                            <input type="number" class="text form-control" name="workingHoursMin" placeholder="最小" value="@ViewBag.Condition.workingHoursMin" />
+                        </div>
+                        <div class="col-md-1">
+                            <input type="number" class="text form-control" name="workingHoursMax" placeholder="最大" value="@ViewBag.Condition.workingHoursMax" />
+                        </div>
+                        <label class="col-md-1">连续工作时间</label>
+                        <div class="col-md-1">
+                            <input type="number" class="text form-control" name="continueHoursMin" placeholder="最小" value="@ViewBag.Condition.continueHoursMin" />
+                        </div>
+                        <div class="col-md-1">
+                            <input type="number" class="text form-control" name="continueHoursMax" placeholder="最大" value="@ViewBag.Condition.continueHoursMax" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1">饭后时长</label>
+                        <div class="col-md-1">
+                            <input type="number" class="text form-control" name="eatedHoursMin" placeholder="最小" value="@ViewBag.Condition.eatedHoursMin" />
+                        </div>
+                        <div class="col-md-1">
+                            <input type="number" class="text form-control" name="eatedHoursMax" placeholder="最大" value="@ViewBag.Condition.eatedHoursMax" />
+                        </div>
+                        <label class="col-md-1">住址</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" name="driverAddress" value="@ViewBag.Condition.driverAddress" />
+                        </div>
+
+                                </div>*@
+
+            </form>
+        </div>
+    </div>
+</div>
+<table id="dataTable" class="table">
+    <thead>
+        <tr>
+
+            <th data-width="160">时间</th>
+            <th data-width="100">分公司</th>
+            <th data-width="60">线路</th>
+            <th data-width="100">车号</th>
+            <th data-width="60">驾驶员</th>
+            <th data-width="200">地点</th>
+            @*<th data-width="60">天气</th>*@
+            @*<th data-width="80">路况地形</th>*@
+            <th data-width="60">车型</th>
+            <th data-width="60">时速</th>
+            <th data-width="200">线路走向</th>
+
+            <th data-width="80">事故责任</th>
+            <th data-width="160">损失情况</th>
+            <th data-width="80">是否私了</th>
+
+            @*<th data-width="60">性别</th>
+                <th data-width="60">年龄</th>
+                <th data-width="80">公交驾龄</th>
+                <th data-width="100">当日工作时长</th>
+                <th data-width="100">连续工作时间</th>
+                <th data-width="80">饭后时长</th>
+                <th data-width="80">体检情况</th>
+                <th data-width="80">婚姻情况</th>
+                <th data-width="160">家庭住址</th>*@
+
+            @*<th data-width="300">事故经过</th>
+                <th data-width="300">原因分析</th>*@
+            <th data-width="100">操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.data != null)
+        {
+            foreach (var item in Model.data)
+            {
+                <tr>
+
+                    <td>@item.accidentTime</td>
+                    <td>@item.dwName</td>
+                    <td>@item.lineName</td>
+                    <td>@item.carNum</td>
+                    <td>@item.driverName</td>
+                    <td>@item.area</td>
+                    @*<td>@item.weather</td>*@
+                    @*<td>@item.roadCondition</td>*@
+                    <td>@item.carType</td>
+                    <td>@item.speed</td>
+                    <td>@item.lineDir</td>
+                    <td>@item.accidentDuty</td>
+
+                    <td>@item.accidentLost</td>
+                    <td>@item.isUnder</td>
+
+                    @*<td>@item.driverSex</td>
+                        <td>@item.driverAge</td>
+                        <td>@item.drivingYears</td>
+                        <td>@item.workingHours</td>
+                        <td>@item.continueHours</td>
+                        <td>@item.eatedHours</td>
+                        <td>@item.healthyCondition</td>
+                        <td>@item.marriageCondition</td>
+                        <td>@item.driverAddress</td>*@
+
+                    @*<td>@item.accidentPass</td>
+                        <td>@item.accidentReason</td>*@
+                    <td>
+                        <i class="icon icon-zoom-in" onclick="watch(@item.id)" title="查看"></i>
+                        <label>   </label>
+                        <a title="修改" class="btn-link" href="/Accident/Update?id=@item.id"><i class="icon icon-pencil"></i></a>
+                        <label>   </label>
+                        <i title="删除" class="icon icon-trash" onclick="deleteModel()"></i>
+                        @using (Html.BeginForm("Delete", "Accident", new { id = item.id }, FormMethod.Post, new { id = "deleteForm" }))
+                        {
+                        }
+
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div><ul id="dataPager" class="pager"></ul></div>
+<div class="modal fade" id="detail">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">关闭</span></button>
+                <h4 class="modal-title" style="text-align:center"><label class="label label-primary">事件详情</label></h4>
+            </div>
+            <div class="modal-body disabled">
+                <form id="detailForm" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-1">分公司</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" id="dwName" />
+                        </div>
+                        <label class="col-md-1">线路</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" id="lineName" />
+                        </div>
+                        <label class="col-md-1">车号</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" id="carNum" />
+                        </div>
+                        <label class="col-md-1">天气</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" id="weather" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1">路况</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" id="roadCondition" />
+                        </div>
+                        <label class="col-md-1">时间</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="accidentTime" />
+                        </div>
+                        <label class="col-md-1">线路走向</label>
+                        <div class="col-md-3">
+                            <input class="text form-control" id="lineDir" />
+                        </div>
+
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <label class="col-md-1">地点</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" id="area" />
+                        </div>
+                        <label class="col-md-1">车型</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" id="carType" />
+                        </div>
+                        <label class="col-md-1">时速</label>
+                        <div class="col-md-2">
+                            <input type="number" class="text form-control" id="speed" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1">事故责任</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" id="accidentDuty" />
+                        </div>
+                        <label class="col-md-1">损失情况</label>
+                        <div class="col-md-2">
+                            <input class="form-control" id="accidentLost" />
+                        </div>
+                        <label class="col-md-1">是否私了</label>
+                        <div class="col-md-2">
+                            <input class="form-control" id="isUnder" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1">事故经过</label>
+                        <div class="col-md-8">
+                            <textarea type="text" readonly="readonly" class="text form-control" rows="3" id="accidentPass"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1">原因分析</label>
+                        <div class="col-md-8">
+                            <textarea class="text form-control" readonly="readonly" id="accidentReason" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <label class="col-md-1">姓名</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" id="driverName" />
+                        </div>
+                        <label class="col-md-1">性别</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" id="driverSex" />
+                        </div>
+                        <label class="col-md-1">体检情况</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" id="healthyCondition" />
+                        </div>
+                        <label class="col-md-1">婚姻情况</label>
+                        <div class="col-md-2">
+                            <input class="text form-control" id="marriageCondition" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1">年龄</label>
+                        <div class="col-md-2">
+                            <input type="number" class="text form-control" id="driverAge" />
+                        </div>
+
+                        <label class="col-md-1">驾龄</label>
+
+                        <div class="col-md-2">
+                            <input type="number" class="text form-control" id="drivingYears" />
+                        </div>
+                        <label class="col-md-1">当日时长</label>
+
+                        <div class="col-md-2">
+                            <input type="number" class="text form-control" id="workingHours" />
+                        </div>
+                        <label class="col-md-1">连续时长</label>
+
+                        <div class="col-md-2">
+                            <input type="number" class="text form-control" id="continueHours" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-1">饭后时长</label>
+
+                        <div class="col-md-2">
+                            <input type="number" class="text form-control" id="eatedHours" />
+                        </div>
+                        <label class="col-md-1">住址</label>
+                        <div class="col-md-5">
+                            <input class="text form-control" id="driverAddress" />
+                        </div>
+
+                    </div>
+                </form>
+
+                @*<div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>*@
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+

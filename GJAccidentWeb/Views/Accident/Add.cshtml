@@ -1,0 +1,327 @@
+﻿
+@{
+    ViewBag.Title = "记录";
+}
+@using GJAccidentWeb.Infrastructure;
+@using GJAccidentWeb.Models;
+@model AccidentModel
+<script type="text/javascript">
+    var IsUnder = ["是", "否"]
+    var Duty = ["全责", "主责", "次责", "同责", "无责"]
+    var Sex = ["男", "女"]
+    var Healthy = ["良好", "合格", "不合格"]
+    var Marriage = ["已婚", "未婚"]
+    $(function () {
+        changeLine();
+        changeCarAndUD();
+        InitCombo();
+    })
+    function InitCombo() {
+        $.each(IsUnder, function (index, value) {
+            if (value == '@Model.isUnder') {
+                $('<option selected="selected" >' + value + '</option>').appendTo("#isUnder");
+            }
+            else {
+                $('<option>' + value + '</option>').appendTo("#isUnder");
+            }
+        });
+        $.each(Duty, function (index, value) {
+            if (value == '@Model.accidentDuty') {
+                $('<option selected="selected" >' + value + '</option>').appendTo("#accidentDuty");
+            }
+            else {
+                $('<option>' + value + '</option>').appendTo("#accidentDuty");
+            }
+        })
+        $.each(Sex, function (index, value) {
+            if (value == '@Model.driverSex') {
+                $('<option selected="selected" >' + value + '</option>').appendTo("#driverSex");
+            }
+            else {
+                $('<option>' + value + '</option>').appendTo("#driverSex");
+            }
+        })
+        $.each(Healthy, function (index, value) {
+            if (value == '@Model.healthyCondition') {
+                $('<option selected="selected" >' + value + '</option>').appendTo("#healthyCondition");
+            }
+            else {
+                $('<option>' + value + '</option>').appendTo("#healthyCondition");
+            }
+        })
+        $.each(Marriage, function (index, value) {
+            if (value == '@Model.marriageCondition') {
+                $('<option selected="selected" >' + value + '</option>').appendTo("#marriageCondition");
+            }
+            else {
+                $('<option>' + value + '</option>').appendTo("#marriageCondition");
+            }
+        })
+    }
+    function changeLine() {
+        $.ajax({
+            url: '/Common/LineInfo',
+            data: { 'companyId': $('#companyId').val(), 'type': '@ModelType.DefaultModel' },
+            type: 'post',
+            dataType: 'json',
+            success: function (data, status) {
+                if (data != null) {
+                    $('#lineId').empty();
+                    $.each(data, function (Index, value) {
+                        if (value == '@Model.lineId') {
+                            $('<option selected="selected" value="' + value + '">' + Index + '</option>').appendTo("#lineId");
+                        }
+                        else {
+                            $('<option value="' + value + '">' + Index + '</option>').appendTo("#lineId");
+                        }
+                    })
+                    $("#lineId").trigger("chosen:updated");
+                    changeCarAndUD();
+                }
+            }
+        });
+    }
+    function changeCarAndUD() {
+        //changeCar();
+        changeUD();
+    }
+    function changeUD() {
+        $.ajax({
+            url: '/Common/LineUDInfo',
+            data: { 'lineId': $('#lineId').val(), 'type': '@ModelType.DefaultModel' },
+            type: 'post',
+            dataType: 'json',
+            success: function (data, status) {
+                if (data != null) {
+                    $('#lineDir').empty();
+                    $.each(data, function (Index, value) {
+                        if (value == '@Model.lineDir') {
+                            $('<option selected="selected" value="' + value + '">' + Index + '</option>').appendTo("#lineDir");
+                        }
+                        else {
+                            $('<option value="' + value + '">' + Index + '</option>').appendTo("#lineDir");
+                        }
+                    })
+                    $("#lineDir").trigger("chosen:updated");
+                }
+            }
+        });
+    }
+    function changeCar() {
+        $.ajax({
+            url: '/Common/CarInfo',
+            data: { 'lineId': $('#lineId').val(), 'type': '@ModelType.DefaultModel' },
+            type: 'post',
+            dataType: 'json',
+            success: function (data, status) {
+                if (data != null) {
+                    $('#carNum').empty();
+                    $.each(data, function (Index, value) {
+                        if (value == '@Model.carNum') {
+                            $('<option selected="selected" value="' + value + '">' + Index + '</option>').appendTo("#carNum");
+                        } else {
+                            $('<option value="' + value + '">' + Index + '</option>').appendTo("#carNum");
+                        }
+                    })
+                    $("#carNum").trigger("chosen:updated");
+                }
+            }
+        });
+
+    }
+    function clearControl() {
+        $('input.text').val('');
+        $('textarea.text').val('')
+    }
+    function add() {
+        $.ajax({
+            url: "/Accident/Add",
+            data: $('#searchForm').serialize(),
+            dataType: 'json',
+            type: 'post',
+            success: function (data, status) {
+                console.log(data);
+                console.log(status);
+            }
+        })
+    }
+</script>
+<div style="color:red">
+    @Html.ValidationSummary(false)
+</div>
+<div class="panel panel-primary">
+    <div class="panel-body">
+        <form id="searchForm" class="form-horizontal" method="post" action="/Accident/Add">
+            <div class="form-group">
+                <label class="col-md-1">分公司</label>
+                <div class="col-md-2">
+                    <select name="dwId" id="companyId" class="chosen-select form-control" onchange="changeLine()">
+                        @foreach (var item in Html.companyInfo(User.Identity.Name,ModelType.DefaultModel))
+                        {
+                            if (Model.dwId.ToString() == item.Value)
+                            {
+                                <option value="@item.Value" selected="selected">@item.Key</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Key</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+                <label class="col-md-1 required">线路</label>
+                <div class="col-md-2">
+                    <select name="lineId" id="lineId" class="chosen-select form-control" onchange="changeCarAndUD()">
+                        @*@foreach (var item in Html.lineInfo(User.Identity.Name, ModelType.DefaultModel))
+                        {
+                            if (Model.lineId == item.Value)
+                            {
+                                <option selected="selected" value="@item.Value">@item.Key</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Key</option>
+                            }
+                        }*@
+                    </select>
+                </div>
+                <label class="col-md-1 required" >车号</label>
+                <div class="col-md-2">
+                    <input name="carNum" id="carNum" class="form-control" value="@Model.carNum" />
+                </div>
+                <label class="col-md-1">天气</label>
+                <div class="col-md-2">
+                    <input class="text form-control" name="weather" value="@Model.weather" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1">路况</label>
+                <div class="col-md-2">
+                    <input class="text form-control" name="roadCondition" value="@Model.roadCondition" />
+                </div>
+                <label class="col-md-1">线路走向</label>
+                <div class="col-md-2">
+                    <select name="lineDir" id="lineDir" class="chosen-search form-control"></select>
+                </div>
+                <label class="col-md-1 required">时间</label>
+                <div class="col-md-2">
+                    <input type="text" class="form-control form-datetime" name="accidentTime" value="@Model.accidentTime" />
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                <label class="col-md-1 required">地点</label>
+                <div class="col-md-2">
+                    <input class="text form-control" name="area" value="@Model.area" />
+                </div>
+                <label class="col-md-1 required">车型</label>
+                <div class="col-md-2">
+                    <input class="text form-control" name="carType" value="@Model.carType" />
+                </div>
+                <label class="col-md-1 required">时速</label>
+                <div class="col-md-2">
+                    <input type="number" class="text form-control" name="speed" value="@Model.speed" />
+                </div>
+                <label class="col-md-1">事故责任</label>
+                <div class="col-md-2">
+                    <select name="accidentDuty" id="accidentDuty" class="chosen-search form-control">
+                        
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+
+                <label class="col-md-1">损失情况</label>
+                <div class="col-md-2">
+                    <input class="form-control" name="accidentLost" value="@Model.accidentLost" />
+                </div>
+                <label class="col-md-1">是否私了</label>
+                <div class="col-md-2">
+                    <select name="isUnder" id="isUnder" class="chosen-search form-control">
+                        
+                    </select>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-1">事故经过</label>
+                <div class="col-md-11">
+                    <textarea type="text" class="text form-control" rows="2" name="accidentPass" >@Model.accidentPass</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1">原因分析</label>
+                <div class="col-md-11">
+                    <textarea class="text form-control" name="accidentReason" rows="2" >@Model.accidentReason</textarea>
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                <label class="col-md-1 required">姓名</label>
+                <div class="col-md-2">
+                    <input class="text form-control" name="driverName" value="@Model.driverName" />
+                </div>
+                <label class="col-md-1">性别</label>
+                <div class="col-md-2">
+                    <select name="driverSex" id="driverSex" class="chosen-search form-control">
+                       
+                    </select>
+                </div>
+                <label class="col-md-1">体检情况</label>
+                <div class="col-md-2">
+                    <select name="healthyCondition" id="healthyCondition" class="chosen-search form-control" >
+                        
+                    </select>
+                </div>
+                <label class="col-md-1">婚姻情况</label>
+                <div class="col-md-2">
+                    <select name="marriageCondition" id="marriageCondition" class="chosen-search form-control">
+                        
+                    </select>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label class="col-md-1">年龄</label>
+                <div class="col-md-2">
+                    <input type="number" class="text form-control" name="driverAge" value="@Model.driverAge" />
+                </div>
+
+                <label class="col-md-1">驾龄</label>
+
+                <div class="col-md-2">
+                    <input type="number" class="text form-control" name="drivingYears" value="@Model.drivingYears" />
+                </div>
+                <label class="col-md-1">工作时长</label>
+
+                <div class="col-md-2">
+                    <input type="number" class="text form-control" name="workingHours" value="@Model.workingHours" />
+                </div>
+                <label class="col-md-1">连续时长</label>
+
+                <div class="col-md-2">
+                    <input type="number" class="text form-control" name="continueHours" value="@Model.continueHours" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-1">饭后时长</label>
+
+                <div class="col-md-2">
+                    <input type="number" class="text form-control" name="eatedHours" value="@Model.eatedHours" />
+                </div>
+                <label class="col-md-1">住址</label>
+                <div class="col-md-2">
+                    <input class="text form-control" name="driverAddress" value="@Model.driverAddress" />
+                </div>
+
+            </div>
+
+            <div class="form-group" style="text-align:center">
+                <button class="btn btn-primary" type="submit">提交</button>
+                <button class="btn btn-primary" type="button" onclick="clearControl()">清空</button>
+                @Html.ActionLink("返回","Index",null,new { @class="btn btn-primary"})
+            </div>
+        </form>
+    </div>
+</div>

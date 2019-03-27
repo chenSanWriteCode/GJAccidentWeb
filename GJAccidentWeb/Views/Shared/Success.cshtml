@@ -1,0 +1,23 @@
+﻿
+<div class="alert alert-success" style="text-align:center">
+    <div class="alert alert-success with-icon">
+        <i class="icon-success-sign"></i>
+        <div class="content">
+            @if (ViewBag.Msg == null)
+            {
+                <div class="content">
+                    操作成功！
+                </div>
+            }
+            else
+            {
+                <div class="content">
+                    @ViewBag.Msg
+                </div>
+            }
+        </div>
+    </div>
+    <a class="btn btn-primary btn-block" href="@ViewBag.ReturnUrl">OK</a>
+</div>
+
+
