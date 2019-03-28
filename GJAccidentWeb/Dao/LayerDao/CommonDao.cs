@@ -27,7 +27,7 @@ namespace GJAccidentWeb.Dao.LayerDao
             List<Car> result = new List<Car>();
             ORACLEHelper context = null;
             string lineId = lineName.Contains(",") ? "0" : lineName;
-            sql_search = $"select c.f_id,c.车牌 from gj_公交车 c where c.线路id in ({lineId}) and c.是否报废=0 order by c.车牌";
+            sql_search = $"select c.f_id,c.车牌 from gj_公交车@dfdb4 c where c.线路id in ({lineId}) and c.是否报废=0 order by c.车牌";
             context = new ORACLEHelper();
             try
             {
@@ -50,7 +50,7 @@ namespace GJAccidentWeb.Dao.LayerDao
             string sql_search = "";
             ORACLEHelper context = null;
 
-            sql_search = "select t.f_id,t.f_name from gj_depart t order by t.f_id";
+            sql_search = "select t.f_id,t.f_name from gj_depart@dfdb4 t order by t.f_id";
             context = new ORACLEHelper();
             try
             {
@@ -78,7 +78,7 @@ namespace GJAccidentWeb.Dao.LayerDao
             string sql_search = "";
             ORACLEHelper context = null;
             string lineId = lineName.Contains(",") ? "0" : lineName;
-            sql_search = $"select ud.f_id,ud.公交线路,ud.方向 from gj_公交线路上下行表 ud where ud.线路id={lineId} order by ud.updown";
+            sql_search = $"select ud.f_id,ud.公交线路,ud.方向 from gj_公交线路上下行表@dfdb4 ud where ud.线路id={lineId} order by ud.updown";
             context = new ORACLEHelper();
             try
             {
@@ -98,16 +98,20 @@ namespace GJAccidentWeb.Dao.LayerDao
             return result;
         }
 
-        public List<Line> lineInfo(string companyId, int database = 0)
+        public List<Line> lineInfo(string companyId,string userNo, int database = 0)
         {
             List<Line> result = new List<Line>();
 
             string sql_search = "";
             ORACLEHelper context = null;
-            sql_search = " select l.f_id,l.线路名称 from gj_depart d,gj_公交线路组 g,gj_公交线路表 l where l.所属线路组=g.f_id and g.单位id=d.f_id";
+            sql_search = " select l.f_id,l.线路名称 from gj_depart@dfdb4 d,gj_公交线路组@dfdb4 g,gj_公交线路表@dfdb4 l where l.所属线路组=g.f_id and g.单位id=d.f_id";
             if (!string.IsNullOrEmpty(companyId))
             {
                 sql_search += $" and d.f_id in ({companyId})";
+            }
+            else
+            {
+                sql_search = $"select l.f_id,l.线路名称 from gj_公交线路表@dfdb4 l,web_rolerightdetail rrd,web_rolerightlevel rrl where rrd.rightdata=l.f_id and rrd.roleid=rrl.roleId and rrl.rightlevelId=2 and rrd.roleId=(select roleId from web_userrole ur where ur.userId=(select f_id from web_users u where u.userNo='{userNo}'))";
             }
             sql_search += "  order by l.线路名称";
             context = new ORACLEHelper();
@@ -221,7 +225,7 @@ namespace GJAccidentWeb.Dao.LayerDao
             try
             {
                 ORACLEHelper context = new ORACLEHelper(1);
-                string roleId = context.GetSingle($"select f_id from web_role t where t.f_id =(select roleId from web_userrole r where r.userId=(select f_id from web_users u where u.username='{userName}'))").ToString();
+                string roleId = context.GetSingle($"select f_id from web_role t where t.f_id =(select roleId from web_userrole r where r.userId=(select f_id from web_users u where u.userNo='{userName}'))").ToString();
                 string sql_search = getSql_LevelMenu(level, roleId);
                 dt_data = context.QueryTable(sql_search);
                 if (dt_data != null)
@@ -273,11 +277,11 @@ namespace GJAccidentWeb.Dao.LayerDao
             string sql_search = "";
             if (!string.IsNullOrEmpty(lineId) && !lineId.Contains(","))
             {
-                sql_search = "select t.f_id,t.名称,ls.顺序  from gj_站点 t, gj_线路站点表 ls where t.f_id = ls.站点id  and  t.名称 not like '%拐点%'  and t.名称 not like '%_下行%'  and t.名称 not like '%_上行%' and ls.线路上下行id = (select f_id  from gj_公交线路上下行表 u  where u.线路id in (" + lineId + ")  and u.updown = " + upOrDown + ") order by ls.顺序";
+                sql_search = "select t.f_id,t.名称,ls.顺序  from gj_站点 t, gj_线路站点表@dfdb4 ls where t.f_id = ls.站点id  and  t.名称 not like '%拐点%'  and t.名称 not like '%_下行%'  and t.名称 not like '%_上行%' and ls.线路上下行id = (select f_id  from gj_公交线路上下行表@dfdb4 u  where u.线路id in (" + lineId + ")  and u.updown = " + upOrDown + ") order by ls.顺序";
             }
             else
             {
-                sql_search = $"select t.f_id,t.名称||'_'||t.地理方向  from gj_站点 t, (select distinct(ls.站点id)  from  gj_线路站点表 ls where ls.线路上下行id in  (select f_id  from gj_公交线路上下行表 u  where u.线路id in  ({lineId}) and u.updown = {upOrDown})) lsu where t.f_id(+) = lsu.站点id   order by t.名称";
+                sql_search = $"select t.f_id,t.名称||'_'||t.地理方向  from gj_站点@dfdb4 t, (select distinct(ls.站点id)  from  gj_线路站点表@dfdb4 ls where ls.线路上下行id in  (select f_id  from gj_公交线路上下行表 u  where u.线路id in  ({lineId}) and u.updown = {upOrDown})) lsu where t.f_id(+) = lsu.站点id   order by t.名称";
             }
             ORACLEHelper context = new ORACLEHelper();
             try
@@ -333,7 +337,7 @@ namespace GJAccidentWeb.Dao.LayerDao
             try
             {
                 context = new ORACLEHelper();
-                string sql = $"select t.f_id,t.f_name from gj_depart t,gj_公交线路组 g,gj_公交线路表 l where l.所属线路组=g.f_id and g.单位id=t.f_id";
+                string sql = $"select t.f_id,t.f_name from gj_depart@dfdb4 t,gj_公交线路组@dfdb4 g,gj_公交线路表@dfdb4 l where l.所属线路组=g.f_id and g.单位id=t.f_id";
                 if (!string.IsNullOrEmpty(line.lineId))
                 {
                     sql += $" and l.f_id={line.lineId}";

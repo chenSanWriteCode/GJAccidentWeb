@@ -30,9 +30,9 @@ namespace GJAccidentWeb.Services.ServiceImpl
             return await Task.Factory.StartNew(() => dao.lineUDInfo(lineName));
         }
 
-        public async Task<List<Line>> lineInfo(string companyId = null, int database = 0)
+        public async Task<List<Line>> lineInfo(string userNo=null,string companyId = null, int database = 0)
         {
-            return await Task.Factory.StartNew(() => dao.lineInfo(companyId, database));
+            return await Task.Factory.StartNew(() => dao.lineInfo(companyId, userNo, database));
         }
         public async Task<List<Station>> getStationInfo(string lineId = null, string upOrDown = null)
         {

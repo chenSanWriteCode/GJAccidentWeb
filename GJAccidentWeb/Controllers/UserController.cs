@@ -129,7 +129,7 @@ namespace GJAccidentWeb.Controllers
         public async Task<ActionResult> Delete(string id)
         {
             var result = await service.delete(id);
-            ViewBag.ReturnUrl = "/Accident/Index";
+            ViewBag.ReturnUrl = "/Account/Login";
             if (result.success)
             {
                 return View("Success");

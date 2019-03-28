@@ -58,7 +58,7 @@
         <label for="roleId" class="col-md-1"> 角色:</label>
         <div class="col-md-2">
             <select id="roleId" name="roleId" class="chosen-select form-control">
-                @foreach (var item in Html.roleInfo())
+                @foreach (var item in Html.roleInfo(User.Identity.Name))
                 {
                     if (ViewBag.Condition.roleId == item.Key)
                     {

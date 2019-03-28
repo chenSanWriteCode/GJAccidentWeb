@@ -196,7 +196,7 @@ namespace GJAccidentWeb.Dao.LayerDao
         public Result<List<UserInfo>> searchUsersByRole(Pager<List<UserInfo>> pager, RoleToUsersQueryModel condition)
         {
             Result<List<UserInfo>> result = new Result<List<UserInfo>>();
-            string sql = $"select t.userid, (select u.username from web_users u where u.f_id=t.userid) username,  createdby, createddate from web_userrole t where roleId='{condition.roleId}' ";
+            string sql = $"select t.userid, username, t.createdby, t.createddate,userNo,companyId from web_userrole t,web_users u where  u.f_id=t.userid and roleId='{condition.roleId}' ";
             List<UserInfo> dataList = new List<UserInfo>();
             try
             {
@@ -210,7 +210,9 @@ namespace GJAccidentWeb.Dao.LayerDao
                         model = new UserInfo();
                         model.id = item["userid"].ToString();
                         model.userName = item["username"].ToString();
-                        model.createdBy = item["createdby"].ToString();
+                        model.createdBy = item["createdby"]?.ToString();
+                        model.userNo = item["userNo"]?.ToString();
+                        model.companyId = item["companyId"]?.ToString();
                         if (item["createdDate"] != DBNull.Value)
                         {
                             model.createdDate = Convert.ToDateTime(item["createdDate"]);

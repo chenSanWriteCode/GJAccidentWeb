@@ -46,6 +46,7 @@
         <table class="table" id="myDataTable">
             <thead>
                 <tr>
+                    <th>工号</th>
                     <th>用户名</th>
                     <th>创建人</th>
                     <th>创建日期</th>
@@ -58,7 +59,7 @@
                     foreach (var item in Model.data)
                     {
                         <tr>
-
+                            <td>@item.userNo</td>
                             <td>@item.userName</td>
                             <td>@item.createdBy</td>
                             <td>@item.createdDate</td>

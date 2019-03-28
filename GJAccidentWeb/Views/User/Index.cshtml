@@ -43,6 +43,8 @@
         <tr>
             <th>工号</th>
             <th>用户名</th>
+            <th>手机号</th>
+            <th>分公司</th>
             <th>创建人</th>
             <th>创建日期</th>
             <th>最后修改人</th>
@@ -57,14 +59,12 @@
                 <tr>
                     <td>@item.userNo</td>
                     <td>@item.userName</td>
+                    <td>@item.phoneNum</td>
+                    <td>@Html.companyInfo()[item.companyId]</td>
                     <td>@item.createdBy</td>
                     <td>@item.createdDate</td>
                     <td>@item.lastUpdatedBy</td>
                     <td>@item.lastUpdatedDate</td>
-                    @*<td>
-                        @Html.ActionLink("修改", "Update", new { id = @item.id }, new { @class = "btn btn-warning" })
-                        <button class="btn btn-danger" type="button" onclick="deleteModel('@item.id')">删除</button>
-                    </td>*@
                 </tr>
             }
         }

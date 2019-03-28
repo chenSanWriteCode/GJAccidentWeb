@@ -106,8 +106,8 @@ namespace GJAccidentWeb.Dao.LayerDao
                         }
                         model.lastUpdatedBy = item["lastUpdatedBy"] != DBNull.Value ? item["lastUpdatedBy"].ToString() : null;
                         model.createdBy = item["createdBy"] != DBNull.Value ? item["createdBy"].ToString() : null;
-                        model.companyId = dt_data.Rows[0]["companyId"]?.ToString();
-                        model.userNo = dt_data.Rows[0]["userNo"]?.ToString();
+                        model.companyId = item["companyId"]?.ToString();
+                        model.userNo = item["userNo"]?.ToString();
                         dataList.Add(model);
                     }
                 }

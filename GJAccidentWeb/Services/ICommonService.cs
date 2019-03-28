@@ -28,7 +28,7 @@ namespace GJAccidentWeb.Services
         /// <param name="companyId"></param>
         /// <param name="database">0 默认；1 Money</param>
         /// <returns></returns>
-        Task<List<Line>> lineInfo(string companyId = null, int database = 0);
+        Task<List<Line>> lineInfo(string userNo=null,string companyId = null, int database = 0);
         /// <summary>
         /// 根据分公司获取不在权限内的线路
         /// </summary>

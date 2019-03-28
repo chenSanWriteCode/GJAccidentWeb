@@ -10,7 +10,7 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading" style="text-align:center">
-        @Html.roleInfo()[Model.roleId]
+        @Html.roleInfo(User.Identity.Name)[Model.roleId]
     </div>
     <div class="panel-body">
         <form action="/RoleRight/Add" method="post" id="dataForm" >
@@ -19,7 +19,7 @@
                 <label for="rightId" class="col-md-1 required">部门名称</label>
                 <div class="col-md-3">
                     <select class="chosen-search form-control" name="rightId" id="rightId">
-                        @foreach (var item in Html.getCompanyNotInList(@Model.roleId))
+                        @foreach (var item in Html.getCompanyNotInList(@Model.roleId,User.Identity.Name))
                         {
                             <option value="@item.Key">@item.Value</option>
                         }

@@ -30,7 +30,7 @@ namespace GJAccidentWeb.Controllers
             {
                 dict.Add("所有", "0");
             }
-            var result = await service.lineInfo(companyId,database);
+            var result = await service.lineInfo(User.Identity.Name,companyId,database);
             result.ForEach(x => dict.Add(x.lineName, x.lineId));
             if (type == ModelType.AllModel)
             {

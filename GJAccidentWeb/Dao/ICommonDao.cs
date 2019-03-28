@@ -24,7 +24,7 @@ namespace GJAccidentWeb.Dao
         /// <param name="companyId"></param>
         /// <param name="database">0 默认；1 Money</param>
         /// <returns></returns>
-        List<Line> lineInfo(string companyId, int database = 0);
+        List<Line> lineInfo(string companyId, string userNo, int database = 0);
         /// <summary>
         /// 根据分公司获取不在权限内的线路
         /// </summary>

@@ -33,7 +33,7 @@ namespace GJAccidentWeb.Controllers
         }
         public async Task<ActionResult> Search(Pager<List<Accident>> pager, AccidentQueryModel condition)
         {
-            var lines = await commonService.lineInfo();
+            var lines = await commonService.lineInfo(User.Identity.Name,condition.dwId=="0"?null: condition.dwId);
 
             if (condition.lineId.Contains(","))
             {
@@ -69,7 +69,7 @@ namespace GJAccidentWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var lines = await commonService.lineInfo();
+                var lines = await commonService.lineInfo(User.Identity.Name,companyId:model.dwId==0?null:model.dwId.ToString());
                 model.lineName = lines.First(x => x.lineId == model.lineId).lineName;
                 var userModel = await userService.searchModelByCondition(new UserInfo { userNo = User.Identity.Name });
                 if (userModel.success)
@@ -121,7 +121,7 @@ namespace GJAccidentWeb.Controllers
                     model.optId = userModel.data.id;
                 }
                 //model.optId = User.Identity.Name;
-                var lines = await commonService.lineInfo();
+                var lines = await commonService.lineInfo(User.Identity.Name, companyId: model.dwId == 0 ? null : model.dwId.ToString());
                 model.lineName = lines.First(x => x.lineId == model.lineId).lineName;
                 var depart = await commonService.getDepartInfoByLine(new Line { lineId = model.lineId });
                 model.dwName = depart.departName;

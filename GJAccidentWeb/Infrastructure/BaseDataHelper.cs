@@ -39,7 +39,7 @@ namespace GJAccidentWeb.Infrastructure
             string sql_search = "";
             ORACLEHelper context = null;
 
-            sql_search = $" select d.f_id,d.f_name from gj_depart d  order by d.f_name";
+            sql_search = $" select d.f_id,d.f_name from gj_depart@dfdb4 d  order by d.f_name";
             context = new ORACLEHelper();
             try
             {
@@ -57,6 +57,30 @@ namespace GJAccidentWeb.Infrastructure
             {
                 dict_company["所有"] = (dict_company.Count > 1 ? string.Join(",", dict_company.Values.ToList()) : "0");
             }
+            return dict_company;
+        }
+        public static Dictionary<string, string> companyInfo(this HtmlHelper html)
+        {
+            Dictionary<string, string> dict_company = new Dictionary<string, string>();
+           
+            string sql_search = "";
+            ORACLEHelper context = null;
+
+            sql_search = $" select d.f_id,d.f_name from gj_depart@dfdb4 d  order by d.f_name";
+            context = new ORACLEHelper();
+            try
+            {
+                DataTable dt_line = context.QueryTable(sql_search);
+                if (dt_line != null)
+                {
+                    foreach (DataRow dr in dt_line.Rows)
+                    {
+                        dict_company.Add(dr[0].ToString(), dr[1].ToString());
+                    }
+                }
+            }
+            catch (Exception) { }
+            
             return dict_company;
         }
         public static Dictionary<string, string> companyInfo(this HtmlHelper html, string userName, ModelType Type = ModelType.AllModel)
@@ -142,13 +166,13 @@ namespace GJAccidentWeb.Infrastructure
         /// </summary>
         /// <param name="html"></param>
         /// <returns></returns>
-        public static Dictionary<int, string> getCompanyNotInList(this HtmlHelper html, string roleId)
+        public static Dictionary<int, string> getCompanyNotInList(this HtmlHelper html, string roleId,string userNo)
         {
             Dictionary<int, string> dict_company = new Dictionary<int, string>();
             string sql_search = "";
             ORACLEHelper context = null;
 
-            sql_search = $" select d.f_id, d.f_name  from gj_depart@dfdb4 d where d.f_id not in (select rrd.rightdata from web_rolerightdetail rrd where rrd.roleId = '{roleId}') order by d.f_name";
+            sql_search = $" select d.f_id, d.f_name  from gj_depart@dfdb4 d where d.f_id not in (select rrd.rightdata from web_rolerightdetail rrd where rrd.roleId = '{roleId}') and d.f_id in (select rrd.rightdata from web_rolerightdetail rrd where rrd.roleId =({getRoleId(userNo)})) order by d.f_name";
             context = new ORACLEHelper(1);
             try
             {
@@ -178,10 +202,10 @@ namespace GJAccidentWeb.Infrastructure
             dict_line.Add("所有", "0");
             string sql_search = "";
             ORACLEHelper context = null;
-            sql_search = $"select t.f_id lineId,t.线路名称 lineName from gj_公交线路表 t ";
+            sql_search = $"select t.f_id lineId,t.线路名称 lineName from gj_公交线路表@dfdb4 t ";
             if (companyId > 0)
             {
-                sql_search += $" where l.所属线路组 in (select f_id from gj_公交线路组 lg where lg.单位id in (select d.f_id from gj_depart d where d.f_id={companyId}))";
+                sql_search += $" where l.所属线路组 in (select f_id from gj_公交线路组@dfdb4 lg where lg.单位id in (select d.f_id from gj_depart@dfdb4 d where d.f_id={companyId}))";
             }
             sql_search += " order by t.线路名称";
             context = new ORACLEHelper();
@@ -254,16 +278,35 @@ namespace GJAccidentWeb.Infrastructure
         /// <param name="html"></param>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        public static Dictionary<int, string> getLineNotInList(this HtmlHelper html, string roleId, string companyId = null)
+        public static Dictionary<int, string> getLineNotInList(this HtmlHelper html, string roleId,string userNo, string companyId = null)
         {
             Dictionary<int, string> dict = new Dictionary<int, string>();
             string sql_search = "";
             ORACLEHelper context = null;
-
-            sql_search = $" select l.f_id,l.线路名称  from gj_公交线路表 l@dfdb4 where l.f_id not in  (select rrd.rightdata from web_rolerightdetail rrd where rrd.roleId = '{roleId}')";
-            if (!string.IsNullOrEmpty(companyId))
+            
+            sql_search = $" select l.f_id,l.线路名称  from gj_公交线路表@dfdb4 l where l.f_id not in  (select rrd.rightdata from web_rolerightdetail rrd where rrd.roleId = '{roleId}')";
+            if (!string.IsNullOrEmpty(companyId)&& companyId!="0")
             {
                 sql_search += $" and  l.所属线路组 in (select f_id from gj_公交线路组@dfdb4 g where g.单位id in(select f_id from gj_depart@dfdb4 d where d.f_id in({companyId})))";
+            }
+            else
+            {
+                var dataLevel = (DataLevel)getUserDataLevel(userNo);
+                string sql_lines = "";
+                switch (dataLevel)
+                {
+                    case DataLevel.Company:
+                        sql_lines = $" and l.所属线路组 in (select f_id from gj_公交线路组@dfdb4 g where g.单位id in(select f_id from gj_depart@dfdb4 d where d.f_id in(select rrd.rightdata from web_rolerightdetail rrd where rrd.roleId = ({getRoleId(userNo)})) ))";
+
+                        break;
+                    case DataLevel.Line:
+                        sql_lines = $" and l.f_id in (select rrd.rightdata from web_rolerightdetail rrd where rrd.roleId = ({getRoleId(userNo)}))";
+                        break;
+
+                    default:
+                        return dict;
+                }
+                sql_search += sql_lines;
             }
             sql_search += " order by l.线路名称";
             context = new ORACLEHelper(1);
@@ -380,11 +423,11 @@ namespace GJAccidentWeb.Infrastructure
             string sql_search = "";
             if (!string.IsNullOrEmpty(lineId) && !lineId.Contains(","))
             {
-                sql_search = "select t.f_id,t.名称||'_'||t.地理方向,ls.顺序  from gj_站点 t, gj_线路站点表 ls where t.f_id = ls.站点id  and ls.线路上下行id = (select f_id  from gj_公交线路上下行表 u  where u.线路id in (" + lineId + ")  and u.updown = " + upOrDown + ") order by ls.顺序";
+                sql_search = "select t.f_id,t.名称||'_'||t.地理方向,ls.顺序  from gj_站点@dfdb4 t, gj_线路站点表@dfdb4 ls where t.f_id = ls.站点id  and ls.线路上下行id = (select f_id  from gj_公交线路上下行表@dfdb4 u  where u.线路id in (" + lineId + ")  and u.updown = " + upOrDown + ") order by ls.顺序";
             }
             else
             {
-                sql_search = $"select t.f_id,t.名称||'_'||t.地理方向  from gj_站点 t, (select distinct(ls.站点id)  from  gj_线路站点表 ls where ls.线路上下行id in       (select f_id  from gj_公交线路上下行表 u  where u.线路id in  ({html.lineInfo(userName)["所有"]}) and u.updown = 2)) lsu where t.f_id(+) = lsu.站点id   order by t.名称";
+                sql_search = $"select t.f_id,t.名称||'_'||t.地理方向  from gj_站点@dfdb4 t, (select distinct(ls.站点id)  from  gj_线路站点表@dfdb4 ls where ls.线路上下行id in       (select f_id  from gj_公交线路上下行表@dfdb4 u  where u.线路id in  ({html.lineInfo(userName)["所有"]}) and u.updown = 2)) lsu where t.f_id(+) = lsu.站点id   order by t.名称";
             }
 
             try
@@ -470,10 +513,10 @@ namespace GJAccidentWeb.Infrastructure
         /// </summary>
         /// <param name="html"></param>
         /// <returns></returns>
-        public static Dictionary<string, string> roleInfo(this HtmlHelper html)
+        public static Dictionary<string, string> roleInfo(this HtmlHelper html,string userNo)
         {
             Dictionary<string, string> dict = new Dictionary<string, string>();
-            string sql = "select t.f_id,t.rolename from web_role t where t.web='事故报警系统' order by t.rolename";
+            string sql = $"select t.f_id,t.rolename from web_role t where t.web='事故报警系统' and t.createdBy='{userNo}' order by t.rolename ";
             try
             {
                 ORACLEHelper context = new ORACLEHelper(1);

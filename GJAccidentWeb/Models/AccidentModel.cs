@@ -14,7 +14,7 @@ namespace GJAccidentWeb.Models
         /// 事故发生时间
         /// </summary>
         public DateTime accidentTime { get; set; } = DateTime.Now.Date;
-        [Required(ErrorMessage = "线路不可为空！")]
+        //[Required(ErrorMessage = "线路不可为空！")]
         public string lineId { get; set; }
         public string lineName { get; set; }
         [Required(ErrorMessage = "车牌号不可为空！")]
@@ -43,7 +43,7 @@ namespace GJAccidentWeb.Models
         public string carType { get; set; }
         [Required(ErrorMessage = "时速不可为空！")]
         public float speed { get; set; }
-        [Required(ErrorMessage = "线路走向不可为空！")]
+        //[Required(ErrorMessage = "线路走向不可为空！")]
         /// <summary>
         /// 线路走向
         /// </summary>

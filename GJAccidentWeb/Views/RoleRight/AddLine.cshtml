@@ -10,10 +10,9 @@
         setLineControl(companyId);
     }
     function setLineControl(companyId) {
-        $.post('/CommonTool/getLineInfoNotInList', { companyId: companyId, roleId: '@Model.roleId' }, function (data) {
-            var line = JSON.parse(data)
+        $.post('/Common/getLineInfoNotInList', { companyId: companyId, roleId: '@Model.roleId' }, function (data) {
             $('#rightId').empty();
-            $.each(line, function () {
+            $.each(data, function () {
                 $('<option value="' + this.lineId + '">' + this.lineName + '</option>').appendTo("#rightId")
             })
             $("#rightId").trigger("chosen:updated");
@@ -25,7 +24,7 @@
 </span>
 <div class="panel panel-primary">
     <div class="panel-heading" style="text-align:center">
-        @Html.roleInfo()[Model.roleId]
+        @Html.roleInfo(User.Identity.Name)[Model.roleId]
     </div>
     <div class="panel-body">
         <form action="/RoleRight/Add" method="post" id="dataForm" class="form-horizontal">
@@ -34,7 +33,7 @@
                 <label for="companyId" class="col-md-1"> 分公司:</label>
                 <div class="col-md-3">
                     <select id="companyId" name="companyId" class="chosen-select form-control" onchange="changeLine()">
-                        @foreach (var item in Html.companyInfo_All())
+                        @foreach (var item in Html.companyInfo(User.Identity.Name))
                         {
                             if (item.Value == Model.companyId)
                             {
@@ -50,7 +49,7 @@
                 <label for="rightId" class="col-md-1 required">线路名称</label>
                 <div class="col-md-3">
                     <select class="chosen-search form-control" name="rightId" id="rightId">
-                        @foreach (var item in Html.getLineNotInList(Model.roleId,Model.companyId))
+                        @foreach (var item in Html.getLineNotInList(Model.roleId,User.Identity.Name, Model.companyId))
                         {
                             <option value="@item.Key">@item.Value</option>
                         }
